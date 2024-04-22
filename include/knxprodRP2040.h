@@ -9,8 +9,8 @@
                                          (time & 0x3FFF) * 3600000 ) : 0 )
                                              
 #define MAIN_OpenKnxId 0xAE
-#define MAIN_ApplicationNumber 45
-#define MAIN_ApplicationVersion 10
+#define MAIN_ApplicationNumber 46
+#define MAIN_ApplicationVersion 0
 #define MAIN_ParameterSize 3721
 #define MAIN_MaxKoNumber 919
 #define MAIN_OrderNumber "MGKnxINET"
