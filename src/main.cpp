@@ -3,7 +3,6 @@
 #include "InternetWeatherModule.h"
 #ifdef ARDUINO_ARCH_ESP32
 #include "WLANModule.h"
-
 #endif
 #include "SIPModule.h"
 #ifdef NET_ModuleVersion
@@ -40,12 +39,12 @@ void setup()
   openknx.addModule(3, openknxInternetWeatherModule);
 #ifdef ARDUINO_ARCH_ESP32    
  //   openknx.addModule(4, openknxOTAUpdateModule);
- openknx.addModule(7, openknxSIPModule);
 #endif
 #ifdef ARDUINO_ARCH_RP2040
     openknx.addModule(5, openknxUsbExchangeModule);
     openknx.addModule(6, openknxFileTransferModule);
 #endif
+    openknx.addModule(7, openknxSIPModule);
     openknx.setup();
 #ifdef USE_AUTO_CONNECT
     config.apid ="OpenKNX";
