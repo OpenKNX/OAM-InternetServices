@@ -47,6 +47,15 @@
     <op:verify File="../lib/OFM-SIPClientModule/library.json" ModuleVersion="0" /> 
   </op:define>
 
+  <op:define prefix="SHC" ModuleType="23"
+    share=   "../lib/OFM-ShutterControllerModule/src/ShutterControllerModule.share.xml"
+    template="../lib/OFM-ShutterControllerModule/src/ShutterControllerModule.templ.xml"
+    NumChannels="10"
+    KoSingleOffset="1000"
+    KoOffset="1010">
+    <op:verify File="../lib/OFM-ShutterControllerModule/library.json" ModuleVersion="0" /> 
+  </op:define>
+
   <op:define prefix="LOG" ModuleType="10"
     share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"
     template="../lib/OFM-LogicModule/src/Logikmodul.templ.xml"
