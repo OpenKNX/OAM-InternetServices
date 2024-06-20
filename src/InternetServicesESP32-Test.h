@@ -12,7 +12,7 @@
 #define MAIN_ApplicationNumber 48
 #define MAIN_ApplicationVersion 0
 #define MAIN_ParameterSize 334
-#define MAIN_MaxKoNumber 489
+#define MAIN_MaxKoNumber 491
 #define MAIN_OrderNumber "MGKnxINET"
 #define BASE_ModuleVersion 17
 #define SHC_ModuleVersion 0
@@ -449,13 +449,13 @@
 #define ParamSHC_ChannelModeShading1OffsetSlatPosition ((int8_t)knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1OffsetSlatPosition)))
 // Nach Beschattung
 #define ParamSHC_ChannelModeShading1AfterShading     (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1AfterShading)))
-// Azimut von
+// von
 #define ParamSHC_ChannelModeShading1ShadingBreakAzimutMin (knx.paramWord(SHC_ParamCalcIndex(SHC_ChannelModeShading1ShadingBreakAzimutMin)))
-// Azimut bis
+// bis
 #define ParamSHC_ChannelModeShading1ShadingBreakAzimutMax (knx.paramWord(SHC_ParamCalcIndex(SHC_ChannelModeShading1ShadingBreakAzimutMax)))
-// Höhenwinkel von
+// von
 #define ParamSHC_ChannelModeShading1ShadingBreakElevationMin (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1ShadingBreakElevationMin)))
-// Höhenwinkel bis
+// bis
 #define ParamSHC_ChannelModeShading1ShadingBreakElevationMax (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1ShadingBreakElevationMax)))
 // Raumtemperatur
 #define ParamSHC_ChannelModeShading1RoomTemperaturActiv ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1RoomTemperaturActiv)) & SHC_ChannelModeShading1RoomTemperaturActivMask))
@@ -517,13 +517,13 @@
 #define ParamSHC_ChannelModeShading2OffsetSlatPosition ((int8_t)knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2OffsetSlatPosition)))
 // Nach Beschattung
 #define ParamSHC_ChannelModeShading2AfterShading     (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2AfterShading)))
-// Azimut von
+// von
 #define ParamSHC_ChannelModeShading2ShadingBreakAzimutMin (knx.paramWord(SHC_ParamCalcIndex(SHC_ChannelModeShading2ShadingBreakAzimutMin)))
-// Azimut bis
+// bis
 #define ParamSHC_ChannelModeShading2ShadingBreakAzimutMax (knx.paramWord(SHC_ParamCalcIndex(SHC_ChannelModeShading2ShadingBreakAzimutMax)))
-// Höhenwinkel von
+// von
 #define ParamSHC_ChannelModeShading2ShadingBreakElevationMin (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2ShadingBreakElevationMin)))
-// Höhenwinkel bis
+// bis
 #define ParamSHC_ChannelModeShading2ShadingBreakElevationMax (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2ShadingBreakElevationMax)))
 // Raumtemperatur
 #define ParamSHC_ChannelModeShading2RoomTemperaturActiv ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2RoomTemperaturActiv)) & SHC_ChannelModeShading2RoomTemperaturActivMask))
@@ -539,7 +539,7 @@
 
 // Communication objects per channel (multiple occurrence)
 #define SHC_KoBlockOffset 420
-#define SHC_KoBlockSize 35
+#define SHC_KoBlockSize 36
 
 #define SHC_KoCalcNumber(index) (index + SHC_KoBlockOffset + _channelIndex * SHC_KoBlockSize)
 #define SHC_KoCalcIndex(number) ((number >= SHC_KoCalcNumber(0) && number < SHC_KoCalcNumber(SHC_KoBlockSize)) ? (number - SHC_KoBlockOffset) % SHC_KoBlockSize : -1)
@@ -547,44 +547,47 @@
 
 #define SHC_KoCHShutterPercentOutput 0
 #define SHC_KoCHShutterSlatOutput 1
-#define SHC_KoCHShadingControl 2
-#define SHC_KoCHShadingControlActive 3
-#define SHC_KoCHShadingActive 4
-#define SHC_KoCHLock 5
-#define SHC_KoCHLockActive 6
-#define SHC_KoCHActiveMode 7
-#define SHC_KoCHManuelActiv 8
-#define SHC_KoCHManualLock 9
-#define SHC_KoCHManualLockActive 10
-#define SHC_KoCHManualUpDown 11
-#define SHC_KoCHManualStepStop 12
-#define SHC_KoCHManualPercent 13
-#define SHC_KoCHManualSlatPercent 14
-#define SHC_KoCHWindowOpenModeActive 15
-#define SHC_KoCHWindow 16
-#define SHC_KoCHWindowOpenLock 17
-#define SHC_KoCHWindowOpenLockActive 18
-#define SHC_KoCHModeNightActive 19
-#define SHC_KoCHModeNight 20
-#define SHC_KoCHModeNightLock 21
-#define SHC_KoCHModeNightLockActive 22
-#define SHC_KoCHHeading 23
-#define SHC_KoCHRoomTemperature 24
-#define SHC_KoCHModeShading1Active 25
-#define SHC_KoCHModeShading1Lock 26
-#define SHC_KoCHModeShading1LockActive 27
-#define SHC_KoCHModeShading1ShadingBreakLock 28
-#define SHC_KoCHModeShading1ShadingBreakLockActive 29
-#define SHC_KoCHModeShading2Active 30
-#define SHC_KoCHModeShading2Lock 31
-#define SHC_KoCHModeShading2LockActive 32
-#define SHC_KoCHModeShading2ShadingBreakLock 33
-#define SHC_KoCHModeShading2ShadingBreakLockActive 34
+#define SHC_KoCHShutterStopStepOutput 2
+#define SHC_KoCHShadingControl 3
+#define SHC_KoCHShadingControlActive 4
+#define SHC_KoCHShadingActive 5
+#define SHC_KoCHLock 6
+#define SHC_KoCHLockActive 7
+#define SHC_KoCHActiveMode 8
+#define SHC_KoCHManuelActiv 9
+#define SHC_KoCHManualLock 10
+#define SHC_KoCHManualLockActive 11
+#define SHC_KoCHManualUpDown 12
+#define SHC_KoCHManualStepStop 13
+#define SHC_KoCHManualPercent 14
+#define SHC_KoCHManualSlatPercent 15
+#define SHC_KoCHWindowOpenModeActive 16
+#define SHC_KoCHWindow 17
+#define SHC_KoCHWindowOpenLock 18
+#define SHC_KoCHWindowOpenLockActive 19
+#define SHC_KoCHModeNightActive 20
+#define SHC_KoCHModeNight 21
+#define SHC_KoCHModeNightLock 22
+#define SHC_KoCHModeNightLockActive 23
+#define SHC_KoCHHeading 24
+#define SHC_KoCHRoomTemperature 25
+#define SHC_KoCHModeShading1Active 26
+#define SHC_KoCHModeShading1Lock 27
+#define SHC_KoCHModeShading1LockActive 28
+#define SHC_KoCHModeShading1ShadingBreakLock 29
+#define SHC_KoCHModeShading1ShadingBreakLockActive 30
+#define SHC_KoCHModeShading2Active 31
+#define SHC_KoCHModeShading2Lock 32
+#define SHC_KoCHModeShading2LockActive 33
+#define SHC_KoCHModeShading2ShadingBreakLock 34
+#define SHC_KoCHModeShading2ShadingBreakLockActive 35
 
 // 
 #define KoSHC_CHShutterPercentOutput              (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHShutterPercentOutput)))
 // 
 #define KoSHC_CHShutterSlatOutput                 (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHShutterSlatOutput)))
+// 
+#define KoSHC_CHShutterStopStepOutput             (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHShutterStopStepOutput)))
 // 
 #define KoSHC_CHShadingControl                    (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHShadingControl)))
 // 

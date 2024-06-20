@@ -50,19 +50,19 @@
   <op:define prefix="SHC" ModuleType="23"
     share=   "../lib/OFM-ShutterControllerModule/src/ShutterControllerModule.share.xml"
     template="../lib/OFM-ShutterControllerModule/src/ShutterControllerModule.templ.xml"
-    NumChannels="1"
-    KoSingleOffset="100"
-    KoOffset="120" >
+    NumChannels="2"
+    KoSingleOffset="400"
+    KoOffset="420" >
     <op:verify File="../lib/OFM-ShutterControllerModule/library.json" ModuleVersion="0" /> 
   </op:define>
 
-  <!-- <op:define prefix="LOG" ModuleType="10"
+  <op:define prefix="LOG" ModuleType="10"
     share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"
     template="../lib/OFM-LogicModule/src/Logikmodul.templ.xml"
-    NumChannels="40" 
+    NumChannels="1" 
     KoOffset="100">
     <op:verify File="../lib/OFM-LogicModule/library.json" ModuleVersion="49" /> 
-  </op:define> -->
+  </op:define>
 
   <generate />
 </KNX>

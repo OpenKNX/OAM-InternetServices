@@ -11,8 +11,8 @@
 #define MAIN_OpenKnxId 0xAE
 #define MAIN_ApplicationNumber 48
 #define MAIN_ApplicationVersion 0
-#define MAIN_ParameterSize 334
-#define MAIN_MaxKoNumber 489
+#define MAIN_ParameterSize 397
+#define MAIN_MaxKoNumber 485
 #define MAIN_OrderNumber "MGKnxINET"
 #define BASE_ModuleVersion 17
 #define SHC_ModuleVersion 0
@@ -171,7 +171,7 @@
 #define ParamSHC_HasTemperaturForecastInput          ((bool)(knx.paramByte(SHC_HasTemperaturForecastInput) & SHC_HasTemperaturForecastInputMask))
 // Helligkeit
 #define ParamSHC_HasBrightnessInput                  ((bool)(knx.paramByte(SHC_HasBrightnessInput) & SHC_HasBrightnessInputMask))
-// UV-Index
+// UVI
 #define ParamSHC_HasUVIInput                         ((bool)(knx.paramByte(SHC_HasUVIInput) & SHC_HasUVIInputMask))
 // Regen
 #define ParamSHC_HasRainInput                        ((bool)(knx.paramByte(SHC_HasRainInput) & SHC_HasRainInputMask))
@@ -207,8 +207,8 @@
 #define SHC_ChannelCount 2
 
 // Parameter per channel
-#define SHC_ParamBlockOffset 49
-#define SHC_ParamBlockSize 93
+#define SHC_ParamBlockOffset 48
+#define SHC_ParamBlockSize 125
 #define SHC_ParamCalcIndex(index) (index + SHC_ParamBlockOffset + _channelIndex * SHC_ParamBlockSize)
 
 #define SHC_ChannelType                          0      // 8 Bits, Bit 7-0
@@ -221,143 +221,117 @@
 #define SHC_ChannelModeNight                     1      // 1 Bit, Bit 5
 #define     SHC_ChannelModeNightMask 0x20
 #define     SHC_ChannelModeNightShift 5
-#define SHC_ChannelRoomTemperature               1      // 1 Bit, Bit 4
-#define     SHC_ChannelRoomTemperatureMask 0x10
-#define     SHC_ChannelRoomTemperatureShift 4
-#define SHC_ChannelNightModeStartBehavior        3      // 4 Bits, Bit 7-4
-#define     SHC_ChannelNightModeStartBehaviorMask 0xF0
-#define     SHC_ChannelNightModeStartBehaviorShift 4
-#define SHC_ChannelModeNightFromTime             4      // 16_t
-#define SHC_ChannelModeNightSunSet               6      // 4 Bits, Bit 7-4
-#define     SHC_ChannelModeNightSunSetMask 0xF0
-#define     SHC_ChannelModeNightSunSetShift 4
-#define SHC_ChannelModeNightSunSetElevationOffset  7      // uint8_t
-#define SHC_ChannelNightModeEndBehavior          8      // 4 Bits, Bit 7-4
-#define     SHC_ChannelNightModeEndBehaviorMask 0xF0
-#define     SHC_ChannelNightModeEndBehaviorShift 4
-#define SHC_ChannelModeNightToTime               9      // 16_t
-#define SHC_ChannelModeNightSunRise             11      // 4 Bits, Bit 7-4
-#define     SHC_ChannelModeNightSunRiseMask 0xF0
-#define     SHC_ChannelModeNightSunRiseShift 4
-#define SHC_ChannelModeNightSunRiseElevationOffset 12      // uint8_t
-#define SHC_ChannelHeatingInput                 13      // 2 Bits, Bit 7-6
-#define     SHC_ChannelHeatingInputMask 0xC0
-#define     SHC_ChannelHeatingInputShift 6
-#define SHC_ChannelModeWindowOpen               14      // 1 Bit, Bit 7
+#define SHC_ChannelModeNightFromTimeActiv        1      // 1 Bit, Bit 4
+#define     SHC_ChannelModeNightFromTimeActivMask 0x10
+#define     SHC_ChannelModeNightFromTimeActivShift 4
+#define SHC_ChannelModeNightToTimeActiv          1      // 1 Bit, Bit 3
+#define     SHC_ChannelModeNightToTimeActivMask 0x08
+#define     SHC_ChannelModeNightToTimeActivShift 3
+#define SHC_ChannelModeNightSunRise              1      // 8 Bits, Bit 2--5
+#define SHC_ChannelModeNightSunSet               1      // 8 Bits, Bit 3--4
+#define SHC_ChannelModeNightFromTime             2      // 16_t
+#define SHC_ChannelModeNightSunSetElevationOffset  4      // uint8_t
+#define SHC_ChannelModeNightToTime               5      // 16_t
+#define SHC_ChannelModeNightSunRiseElevationOffset  7      // uint8_t
+#define SHC_ChannelModeWindowOpen               64      // 1 Bit, Bit 7
 #define     SHC_ChannelModeWindowOpenMask 0x80
 #define     SHC_ChannelModeWindowOpenShift 7
-#define SHC_ChannelModeWindowOpenPositionControl 14      // 1 Bit, Bit 6
+#define SHC_ChannelModeWindowOpenPositionControl 64      // 1 Bit, Bit 6
 #define     SHC_ChannelModeWindowOpenPositionControlMask 0x40
 #define     SHC_ChannelModeWindowOpenPositionControlShift 6
-#define SHC_ChannelModeWindowOpenSlatPositionControl 14      // 1 Bit, Bit 5
+#define SHC_ChannelModeWindowOpenSlatPositionControl 64      // 1 Bit, Bit 5
 #define     SHC_ChannelModeWindowOpenSlatPositionControlMask 0x20
 #define     SHC_ChannelModeWindowOpenSlatPositionControlShift 5
-#define SHC_ChannelModeWindowOpenPosition       15      // uint8_t
-#define SHC_ChannelModeWindowOpenSlatPosition   16      // uint8_t
-#define SHC_ChannelModeShading1                 17      // 1 Bit, Bit 7
+#define SHC_ChannelModeWindowOpenPosition       65      // uint8_t
+#define SHC_ChannelModeWindowOpenSlatPosition   66      // uint8_t
+#define SHC_ChannelModeShading1                 67      // 1 Bit, Bit 7
 #define     SHC_ChannelModeShading1Mask 0x80
 #define     SHC_ChannelModeShading1Shift 7
-#define SHC_ChannelModeShading1TemperatureActive 17      // 1 Bit, Bit 6
+#define SHC_ChannelModeShading1TemperatureActive 67      // 1 Bit, Bit 6
 #define     SHC_ChannelModeShading1TemperatureActiveMask 0x40
 #define     SHC_ChannelModeShading1TemperatureActiveShift 6
-#define SHC_ChannelModeShading1TemperatureForecast 17      // 1 Bit, Bit 5
+#define SHC_ChannelModeShading1TemperatureForecast 67      // 1 Bit, Bit 5
 #define     SHC_ChannelModeShading1TemperatureForecastMask 0x20
 #define     SHC_ChannelModeShading1TemperatureForecastShift 5
-#define SHC_ChannelModeShading1BrightnessActiv  17      // 1 Bit, Bit 4
+#define SHC_ChannelModeShading1BrightnessActiv  67      // 1 Bit, Bit 4
 #define     SHC_ChannelModeShading1BrightnessActivMask 0x10
 #define     SHC_ChannelModeShading1BrightnessActivShift 4
-#define SHC_ChannelModeShading1UVIActiv         17      // 1 Bit, Bit 3
+#define SHC_ChannelModeShading1UVIActiv         67      // 1 Bit, Bit 3
 #define     SHC_ChannelModeShading1UVIActivMask 0x08
 #define     SHC_ChannelModeShading1UVIActivShift 3
-#define SHC_ChannelModeShading1RainActiv        17      // 1 Bit, Bit 2
+#define SHC_ChannelModeShading1RainActiv        67      // 1 Bit, Bit 2
 #define     SHC_ChannelModeShading1RainActivMask 0x04
 #define     SHC_ChannelModeShading1RainActivShift 2
-#define SHC_ChannelModeShading1SlatElevationDepending 17      // 1 Bit, Bit 1
+#define SHC_ChannelModeShading1SlatElevationDepending 67      // 1 Bit, Bit 1
 #define     SHC_ChannelModeShading1SlatElevationDependingMask 0x02
 #define     SHC_ChannelModeShading1SlatElevationDependingShift 1
-#define SHC_ChannelModeShading1ShadingBreak     17      // 8 Bits, Bit 0--7
-#define SHC_ChannelModeShading1WaitTimeStart    18      // uint16_t
-#define SHC_ChannelModeShading1WaitTimeEnd      20      // uint16_t
-#define SHC_ChannelModeShading1AzimutMin        22      // uint16_t
-#define SHC_ChannelModeShading1AzimutMax        24      // uint16_t
-#define SHC_ChannelModeShading1ElevationMin     26      // uint8_t
-#define SHC_ChannelModeShading1ElevationMax     27      // uint8_t
-#define SHC_ChannelModeShading1TemperatureMin   28      // uint8_t
-#define SHC_ChannelModeShading1TemperatureForecastMin 29      // uint8_t
-#define SHC_ChannelModeShading1BrightnessMin    30      // uint8_t
-#define SHC_ChannelModeShading1Hysterese        31      // uint8_t
-#define SHC_ChannelModeShading1UVIMin           32      // float
-#define SHC_ChannelModeShading1Clouds           36      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading1ActivationOnlyIfLessThan 37      // uint8_t
-#define SHC_ChannelModeShading1ShadingPosition  38      // uint8_t
-#define SHC_ChannelModeShading1SlatShadingPosition 39      // uint8_t
-#define SHC_ChannelModeShading1MinChangeForSlatAdaption 40      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading1OffsetSlatPosition 41      // int8_t
-#define SHC_ChannelModeShading1AfterShading     42      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading1ShadingBreakAzimutMin 43      // uint16_t
-#define SHC_ChannelModeShading1ShadingBreakAzimutMax 45      // uint16_t
-#define SHC_ChannelModeShading1ShadingBreakElevationMin 47      // uint8_t
-#define SHC_ChannelModeShading1ShadingBreakElevationMax 48      // uint8_t
-#define SHC_ChannelModeShading1RoomTemperaturActiv 49      // 1 Bit, Bit 7
-#define     SHC_ChannelModeShading1RoomTemperaturActivMask 0x80
-#define     SHC_ChannelModeShading1RoomTemperaturActivShift 7
-#define SHC_ChannelModeShading1HeatingActive    49      // 1 Bit, Bit 6
-#define     SHC_ChannelModeShading1HeatingActiveMask 0x40
-#define     SHC_ChannelModeShading1HeatingActiveShift 6
-#define SHC_ChannelModeShading1MaxHeatingValue  50      // uint8_t
-#define SHC_ChannelModeShading1RoomTemperaturMinimum 51      // float
-#define SHC_ChannelModeShading2                 55      // 1 Bit, Bit 7
+#define SHC_ChannelModeShading1ShadingBreak     67      // 8 Bits, Bit 0--7
+#define SHC_ChannelModeShading1WaitTimeStart    68      // uint16_t
+#define SHC_ChannelModeShading1WaitTimeEnd      70      // uint16_t
+#define SHC_ChannelModeShading1AzimutMin        72      // uint16_t
+#define SHC_ChannelModeShading1AzimutMax        74      // uint16_t
+#define SHC_ChannelModeShading1ElevationMin     76      // uint8_t
+#define SHC_ChannelModeShading1ElevationMax     77      // uint8_t
+#define SHC_ChannelModeShading1TemperatureMin   78      // uint8_t
+#define SHC_ChannelModeShading1TemperatureForecastMin 79      // uint8_t
+#define SHC_ChannelModeShading1BrightnessMin    80      // uint8_t
+#define SHC_ChannelModeShading1Hysterese        81      // uint8_t
+#define SHC_ChannelModeShading1UVIMin           82      // float
+#define SHC_ChannelModeShading1Clouds           83      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading1ActivationOnlyIfLessThan 84      // uint8_t
+#define SHC_ChannelModeShading1ShadingPosition  85      // uint8_t
+#define SHC_ChannelModeShading1SlatShadingPosition 86      // uint8_t
+#define SHC_ChannelModeShading1MinChangeForSlatAdaption 87      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading1OffsetSlatPosition 88      // int8_t
+#define SHC_ChannelModeShading1AfterShading     89      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading1ShadingBreakAzimutMin 90      // uint16_t
+#define SHC_ChannelModeShading1ShadingBreakAzimutMax 92      // uint16_t
+#define SHC_ChannelModeShading1ShadingBreakElevationMin 94      // uint8_t
+#define SHC_ChannelModeShading1ShadingBreakElevationMax 95      // uint8_t
+#define SHC_ChannelModeShading2                 96      // 1 Bit, Bit 7
 #define     SHC_ChannelModeShading2Mask 0x80
 #define     SHC_ChannelModeShading2Shift 7
-#define SHC_ChannelModeShading2TemperatureActive 55      // 1 Bit, Bit 6
+#define SHC_ChannelModeShading2TemperatureActive 96      // 1 Bit, Bit 6
 #define     SHC_ChannelModeShading2TemperatureActiveMask 0x40
 #define     SHC_ChannelModeShading2TemperatureActiveShift 6
-#define SHC_ChannelModeShading2TemperatureForecast 55      // 1 Bit, Bit 5
+#define SHC_ChannelModeShading2TemperatureForecast 96      // 1 Bit, Bit 5
 #define     SHC_ChannelModeShading2TemperatureForecastMask 0x20
 #define     SHC_ChannelModeShading2TemperatureForecastShift 5
-#define SHC_ChannelModeShading2BrightnessActiv  55      // 1 Bit, Bit 4
+#define SHC_ChannelModeShading2BrightnessActiv  96      // 1 Bit, Bit 4
 #define     SHC_ChannelModeShading2BrightnessActivMask 0x10
 #define     SHC_ChannelModeShading2BrightnessActivShift 4
-#define SHC_ChannelModeShading2UVIActiv         55      // 1 Bit, Bit 3
+#define SHC_ChannelModeShading2UVIActiv         96      // 1 Bit, Bit 3
 #define     SHC_ChannelModeShading2UVIActivMask 0x08
 #define     SHC_ChannelModeShading2UVIActivShift 3
-#define SHC_ChannelModeShading2RainActiv        55      // 1 Bit, Bit 2
+#define SHC_ChannelModeShading2RainActiv        96      // 1 Bit, Bit 2
 #define     SHC_ChannelModeShading2RainActivMask 0x04
 #define     SHC_ChannelModeShading2RainActivShift 2
-#define SHC_ChannelModeShading2SlatElevationDepending 55      // 1 Bit, Bit 1
+#define SHC_ChannelModeShading2SlatElevationDepending 96      // 1 Bit, Bit 1
 #define     SHC_ChannelModeShading2SlatElevationDependingMask 0x02
 #define     SHC_ChannelModeShading2SlatElevationDependingShift 1
-#define SHC_ChannelModeShading2ShadingBreak     55      // 8 Bits, Bit 0--7
-#define SHC_ChannelModeShading2WaitTimeStart    56      // uint16_t
-#define SHC_ChannelModeShading2WaitTimeEnd      58      // uint16_t
-#define SHC_ChannelModeShading2AzimutMin        60      // uint16_t
-#define SHC_ChannelModeShading2AzimutMax        62      // uint16_t
-#define SHC_ChannelModeShading2ElevationMin     64      // uint8_t
-#define SHC_ChannelModeShading2ElevationMax     65      // uint8_t
-#define SHC_ChannelModeShading2TemperatureMin   66      // uint8_t
-#define SHC_ChannelModeShading2TemperatureForecastMin 67      // uint8_t
-#define SHC_ChannelModeShading2BrightnessMin    68      // uint8_t
-#define SHC_ChannelModeShading2Hysterese        69      // uint8_t
-#define SHC_ChannelModeShading2UVIMin           70      // float
-#define SHC_ChannelModeShading2Clouds           74      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading2ActivationOnlyIfLessThan 75      // uint8_t
-#define SHC_ChannelModeShading2ShadingPosition  76      // uint8_t
-#define SHC_ChannelModeShading2SlatShadingPosition 77      // uint8_t
-#define SHC_ChannelModeShading2MinChangeForSlatAdaption 78      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading2OffsetSlatPosition 79      // int8_t
-#define SHC_ChannelModeShading2AfterShading     80      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading2ShadingBreakAzimutMin 81      // uint16_t
-#define SHC_ChannelModeShading2ShadingBreakAzimutMax 83      // uint16_t
-#define SHC_ChannelModeShading2ShadingBreakElevationMin 85      // uint8_t
-#define SHC_ChannelModeShading2ShadingBreakElevationMax 86      // uint8_t
-#define SHC_ChannelModeShading2RoomTemperaturActiv 87      // 1 Bit, Bit 7
-#define     SHC_ChannelModeShading2RoomTemperaturActivMask 0x80
-#define     SHC_ChannelModeShading2RoomTemperaturActivShift 7
-#define SHC_ChannelModeShading2HeatingActive    87      // 1 Bit, Bit 6
-#define     SHC_ChannelModeShading2HeatingActiveMask 0x40
-#define     SHC_ChannelModeShading2HeatingActiveShift 6
-#define SHC_ChannelModeShading2MaxHeatingValue  88      // uint8_t
-#define SHC_ChannelModeShading2RoomTemperaturMinimum 89      // float
+#define SHC_ChannelModeShading2ShadingBreak     96      // 8 Bits, Bit 0--7
+#define SHC_ChannelModeShading2WaitTimeStart    97      // uint16_t
+#define SHC_ChannelModeShading2WaitTimeEnd      99      // uint16_t
+#define SHC_ChannelModeShading2AzimutMin        101      // uint16_t
+#define SHC_ChannelModeShading2AzimutMax        103      // uint16_t
+#define SHC_ChannelModeShading2ElevationMin     105      // uint8_t
+#define SHC_ChannelModeShading2ElevationMax     106      // uint8_t
+#define SHC_ChannelModeShading2TemperatureMin   107      // uint8_t
+#define SHC_ChannelModeShading2TemperatureForecastMin 108      // uint8_t
+#define SHC_ChannelModeShading2BrightnessMin    109      // uint8_t
+#define SHC_ChannelModeShading2Hysterese        110      // uint8_t
+#define SHC_ChannelModeShading2UVIMin           111      // float
+#define SHC_ChannelModeShading2Clouds           112      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading2ActivationOnlyIfLessThan 113      // uint8_t
+#define SHC_ChannelModeShading2ShadingPosition  114      // uint8_t
+#define SHC_ChannelModeShading2SlatShadingPosition 115      // uint8_t
+#define SHC_ChannelModeShading2MinChangeForSlatAdaption 116      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading2OffsetSlatPosition 117      // int8_t
+#define SHC_ChannelModeShading2AfterShading     118      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading2ShadingBreakAzimutMin 119      // uint16_t
+#define SHC_ChannelModeShading2ShadingBreakAzimutMax 121      // uint16_t
+#define SHC_ChannelModeShading2ShadingBreakElevationMin 123      // uint8_t
+#define SHC_ChannelModeShading2ShadingBreakElevationMax 124      // uint8_t
 
 // Geräteart
 #define ParamSHC_ChannelType                         (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelType)))
@@ -367,26 +341,22 @@
 #define ParamSHC_ChannelIgnoreFirstManualCommandIfShadingActiv ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelIgnoreFirstManualCommandIfShadingActiv)) & SHC_ChannelIgnoreFirstManualCommandIfShadingActivMask))
 // Nachtmodus
 #define ParamSHC_ChannelModeNight                    ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeNight)) & SHC_ChannelModeNightMask))
-// Raumtemperatur
-#define ParamSHC_ChannelRoomTemperature              ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelRoomTemperature)) & SHC_ChannelRoomTemperatureMask))
-// Start Auslöser
-#define ParamSHC_ChannelNightModeStartBehavior       ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelNightModeStartBehavior)) & SHC_ChannelNightModeStartBehaviorMask) >> SHC_ChannelNightModeStartBehaviorShift)
-// Uhrzeit
+// Ab Uhrzeit
+#define ParamSHC_ChannelModeNightFromTimeActiv       ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeNightFromTimeActiv)) & SHC_ChannelModeNightFromTimeActivMask))
+// Bis Uhrzeit
+#define ParamSHC_ChannelModeNightToTimeActiv         ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeNightToTimeActiv)) & SHC_ChannelModeNightToTimeActivMask))
+// Sonnenaufgang
+#define ParamSHC_ChannelModeNightSunRise             (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeNightSunRise)))
+// Sonnenuntergang
+#define ParamSHC_ChannelModeNightSunSet              (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeNightSunSet)))
+// Ab
 #define ParamSHC_ChannelModeNightFromTime            ()
-// Sonne
-#define ParamSHC_ChannelModeNightSunSet              ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeNightSunSet)) & SHC_ChannelModeNightSunSetMask) >> SHC_ChannelModeNightSunSetShift)
 // Höhenwinkel Offset
 #define ParamSHC_ChannelModeNightSunSetElevationOffset (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeNightSunSetElevationOffset)))
-// Ende Auslöser
-#define ParamSHC_ChannelNightModeEndBehavior         ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelNightModeEndBehavior)) & SHC_ChannelNightModeEndBehaviorMask) >> SHC_ChannelNightModeEndBehaviorShift)
-// Uhrzeit
+// Bis
 #define ParamSHC_ChannelModeNightToTime              ()
-// Sonne
-#define ParamSHC_ChannelModeNightSunRise             ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeNightSunRise)) & SHC_ChannelModeNightSunRiseMask) >> SHC_ChannelModeNightSunRiseShift)
 // Höhenwinkel Offset
 #define ParamSHC_ChannelModeNightSunRiseElevationOffset (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeNightSunRiseElevationOffset)))
-// Heinzung
-#define ParamSHC_ChannelHeatingInput                 ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelHeatingInput)) & SHC_ChannelHeatingInputMask) >> SHC_ChannelHeatingInputShift)
 // Fenster offen Modus
 #define ParamSHC_ChannelModeWindowOpen               ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpen)) & SHC_ChannelModeWindowOpenMask))
 // Position anfahren wenn geschlossen
@@ -457,14 +427,6 @@
 #define ParamSHC_ChannelModeShading1ShadingBreakElevationMin (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1ShadingBreakElevationMin)))
 // Höhenwinkel bis
 #define ParamSHC_ChannelModeShading1ShadingBreakElevationMax (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1ShadingBreakElevationMax)))
-// Raumtemperatur
-#define ParamSHC_ChannelModeShading1RoomTemperaturActiv ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1RoomTemperaturActiv)) & SHC_ChannelModeShading1RoomTemperaturActivMask))
-// Heizung
-#define ParamSHC_ChannelModeShading1HeatingActive    ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1HeatingActive)) & SHC_ChannelModeShading1HeatingActiveMask))
-// Maximaler Heinzungsstellwert
-#define ParamSHC_ChannelModeShading1MaxHeatingValue  (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1MaxHeatingValue)))
-// Minimale Raumtemperatur
-#define ParamSHC_ChannelModeShading1RoomTemperaturMinimum (knx.paramFloat(SHC_ParamCalcIndex(SHC_ChannelModeShading1RoomTemperaturMinimum), Float_Enc_IEEE754Single))
 // Beschattungsmodus 2
 #define ParamSHC_ChannelModeShading2                 ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2)) & SHC_ChannelModeShading2Mask))
 // Temperaturgrenze
@@ -525,21 +487,13 @@
 #define ParamSHC_ChannelModeShading2ShadingBreakElevationMin (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2ShadingBreakElevationMin)))
 // Höhenwinkel bis
 #define ParamSHC_ChannelModeShading2ShadingBreakElevationMax (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2ShadingBreakElevationMax)))
-// Raumtemperatur
-#define ParamSHC_ChannelModeShading2RoomTemperaturActiv ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2RoomTemperaturActiv)) & SHC_ChannelModeShading2RoomTemperaturActivMask))
-// Heizung
-#define ParamSHC_ChannelModeShading2HeatingActive    ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2HeatingActive)) & SHC_ChannelModeShading2HeatingActiveMask))
-// Maximaler Heinzungsstellwert
-#define ParamSHC_ChannelModeShading2MaxHeatingValue  (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading2MaxHeatingValue)))
-// Minimale Raumtemperatur
-#define ParamSHC_ChannelModeShading2RoomTemperaturMinimum (knx.paramFloat(SHC_ParamCalcIndex(SHC_ChannelModeShading2RoomTemperaturMinimum), Float_Enc_IEEE754Single))
 
 // deprecated
 #define SHC_KoOffset 420
 
 // Communication objects per channel (multiple occurrence)
 #define SHC_KoBlockOffset 420
-#define SHC_KoBlockSize 35
+#define SHC_KoBlockSize 33
 
 #define SHC_KoCalcNumber(index) (index + SHC_KoBlockOffset + _channelIndex * SHC_KoBlockSize)
 #define SHC_KoCalcIndex(number) ((number >= SHC_KoCalcNumber(0) && number < SHC_KoCalcNumber(SHC_KoBlockSize)) ? (number - SHC_KoBlockOffset) % SHC_KoBlockSize : -1)
@@ -566,20 +520,18 @@
 #define SHC_KoCHWindowOpenLockActive 18
 #define SHC_KoCHModeNightActive 19
 #define SHC_KoCHModeNight 20
-#define SHC_KoCHModeNightLock 21
+#define SHC_KoCHNightLock 21
 #define SHC_KoCHModeNightLockActive 22
-#define SHC_KoCHHeading 23
-#define SHC_KoCHRoomTemperature 24
-#define SHC_KoCHModeShading1Active 25
-#define SHC_KoCHModeShading1Lock 26
-#define SHC_KoCHModeShading1LockActive 27
-#define SHC_KoCHModeShading1ShadingBreakLock 28
-#define SHC_KoCHModeShading1ShadingBreakLockActive 29
-#define SHC_KoCHModeShading2Active 30
-#define SHC_KoCHModeShading2Lock 31
-#define SHC_KoCHModeShading2LockActive 32
-#define SHC_KoCHModeShading2ShadingBreakLock 33
-#define SHC_KoCHModeShading2ShadingBreakLockActive 34
+#define SHC_KoCHModeShading1Active 23
+#define SHC_KoCHModeShading1Lock 24
+#define SHC_KoCHModeShading1LockActive 25
+#define SHC_KoCHModeShading1ShadingBreakLock 26
+#define SHC_KoCHModeShading1ShadingBreakLockActive 27
+#define SHC_KoCHModeShading2Active 28
+#define SHC_KoCHModeShading2Lock 29
+#define SHC_KoCHModeShading2LockActive 30
+#define SHC_KoCHModeShading2ShadingBreakLock 31
+#define SHC_KoCHModeShading2ShadingBreakLockActive 32
 
 // 
 #define KoSHC_CHShutterPercentOutput              (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHShutterPercentOutput)))
@@ -624,13 +576,9 @@
 // 
 #define KoSHC_CHModeNight                         (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeNight)))
 // 
-#define KoSHC_CHModeNightLock                     (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeNightLock)))
+#define KoSHC_CHNightLock                         (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHNightLock)))
 // 
 #define KoSHC_CHModeNightLockActive               (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeNightLockActive)))
-// Aktueller Heizungsstellwert
-#define KoSHC_CHHeading                           (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHHeading)))
-// Raumtemperatur
-#define KoSHC_CHRoomTemperature                   (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHRoomTemperature)))
 // 
 #define KoSHC_CHModeShading1Active                (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeShading1Active)))
 // 
@@ -652,128 +600,128 @@
 // 
 #define KoSHC_CHModeShading2ShadingBreakLockActive (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeShading2ShadingBreakLockActive)))
 
-#define LOG_BuzzerInstalled                     235      // 1 Bit, Bit 7
+#define LOG_BuzzerInstalled                     298      // 1 Bit, Bit 7
 #define     LOG_BuzzerInstalledMask 0x80
 #define     LOG_BuzzerInstalledShift 7
-#define LOG_LedInstalled                        235      // 1 Bit, Bit 6
+#define LOG_LedInstalled                        298      // 1 Bit, Bit 6
 #define     LOG_LedInstalledMask 0x40
 #define     LOG_LedInstalledShift 6
-#define LOG_VacationKo                          235      // 1 Bit, Bit 5
+#define LOG_VacationKo                          298      // 1 Bit, Bit 5
 #define     LOG_VacationKoMask 0x20
 #define     LOG_VacationKoShift 5
-#define LOG_HolidayKo                           235      // 1 Bit, Bit 4
+#define LOG_HolidayKo                           298      // 1 Bit, Bit 4
 #define     LOG_HolidayKoMask 0x10
 #define     LOG_HolidayKoShift 4
-#define LOG_VacationRead                        235      // 1 Bit, Bit 3
+#define LOG_VacationRead                        298      // 1 Bit, Bit 3
 #define     LOG_VacationReadMask 0x08
 #define     LOG_VacationReadShift 3
-#define LOG_HolidaySend                         235      // 1 Bit, Bit 2
+#define LOG_HolidaySend                         298      // 1 Bit, Bit 2
 #define     LOG_HolidaySendMask 0x04
 #define     LOG_HolidaySendShift 2
-#define LOG_EnableSave                          235      // 1 Bit, Bit 1
+#define LOG_EnableSave                          298      // 1 Bit, Bit 1
 #define     LOG_EnableSaveMask 0x02
 #define     LOG_EnableSaveShift 1
-#define LOG_Neujahr                             236      // 1 Bit, Bit 7
+#define LOG_Neujahr                             299      // 1 Bit, Bit 7
 #define     LOG_NeujahrMask 0x80
 #define     LOG_NeujahrShift 7
-#define LOG_DreiKoenige                         236      // 1 Bit, Bit 6
+#define LOG_DreiKoenige                         299      // 1 Bit, Bit 6
 #define     LOG_DreiKoenigeMask 0x40
 #define     LOG_DreiKoenigeShift 6
-#define LOG_Weiberfastnacht                     236      // 1 Bit, Bit 5
+#define LOG_Weiberfastnacht                     299      // 1 Bit, Bit 5
 #define     LOG_WeiberfastnachtMask 0x20
 #define     LOG_WeiberfastnachtShift 5
-#define LOG_Rosenmontag                         236      // 1 Bit, Bit 4
+#define LOG_Rosenmontag                         299      // 1 Bit, Bit 4
 #define     LOG_RosenmontagMask 0x10
 #define     LOG_RosenmontagShift 4
-#define LOG_Fastnachtsdienstag                  236      // 1 Bit, Bit 3
+#define LOG_Fastnachtsdienstag                  299      // 1 Bit, Bit 3
 #define     LOG_FastnachtsdienstagMask 0x08
 #define     LOG_FastnachtsdienstagShift 3
-#define LOG_Aschermittwoch                      236      // 1 Bit, Bit 2
+#define LOG_Aschermittwoch                      299      // 1 Bit, Bit 2
 #define     LOG_AschermittwochMask 0x04
 #define     LOG_AschermittwochShift 2
-#define LOG_Frauentag                           236      // 1 Bit, Bit 1
+#define LOG_Frauentag                           299      // 1 Bit, Bit 1
 #define     LOG_FrauentagMask 0x02
 #define     LOG_FrauentagShift 1
-#define LOG_Gruendonnerstag                     236      // 1 Bit, Bit 0
+#define LOG_Gruendonnerstag                     299      // 1 Bit, Bit 0
 #define     LOG_GruendonnerstagMask 0x01
 #define     LOG_GruendonnerstagShift 0
-#define LOG_Karfreitag                          237      // 1 Bit, Bit 7
+#define LOG_Karfreitag                          300      // 1 Bit, Bit 7
 #define     LOG_KarfreitagMask 0x80
 #define     LOG_KarfreitagShift 7
-#define LOG_Ostersonntag                        237      // 1 Bit, Bit 6
+#define LOG_Ostersonntag                        300      // 1 Bit, Bit 6
 #define     LOG_OstersonntagMask 0x40
 #define     LOG_OstersonntagShift 6
-#define LOG_Ostermontag                         237      // 1 Bit, Bit 5
+#define LOG_Ostermontag                         300      // 1 Bit, Bit 5
 #define     LOG_OstermontagMask 0x20
 #define     LOG_OstermontagShift 5
-#define LOG_TagDerArbeit                        237      // 1 Bit, Bit 4
+#define LOG_TagDerArbeit                        300      // 1 Bit, Bit 4
 #define     LOG_TagDerArbeitMask 0x10
 #define     LOG_TagDerArbeitShift 4
-#define LOG_Himmelfahrt                         237      // 1 Bit, Bit 3
+#define LOG_Himmelfahrt                         300      // 1 Bit, Bit 3
 #define     LOG_HimmelfahrtMask 0x08
 #define     LOG_HimmelfahrtShift 3
-#define LOG_Pfingstsonntag                      237      // 1 Bit, Bit 2
+#define LOG_Pfingstsonntag                      300      // 1 Bit, Bit 2
 #define     LOG_PfingstsonntagMask 0x04
 #define     LOG_PfingstsonntagShift 2
-#define LOG_Pfingstmontag                       237      // 1 Bit, Bit 1
+#define LOG_Pfingstmontag                       300      // 1 Bit, Bit 1
 #define     LOG_PfingstmontagMask 0x02
 #define     LOG_PfingstmontagShift 1
-#define LOG_Fronleichnam                        237      // 1 Bit, Bit 0
+#define LOG_Fronleichnam                        300      // 1 Bit, Bit 0
 #define     LOG_FronleichnamMask 0x01
 #define     LOG_FronleichnamShift 0
-#define LOG_Friedensfest                        238      // 1 Bit, Bit 7
+#define LOG_Friedensfest                        301      // 1 Bit, Bit 7
 #define     LOG_FriedensfestMask 0x80
 #define     LOG_FriedensfestShift 7
-#define LOG_MariaHimmelfahrt                    238      // 1 Bit, Bit 6
+#define LOG_MariaHimmelfahrt                    301      // 1 Bit, Bit 6
 #define     LOG_MariaHimmelfahrtMask 0x40
 #define     LOG_MariaHimmelfahrtShift 6
-#define LOG_DeutscheEinheit                     238      // 1 Bit, Bit 5
+#define LOG_DeutscheEinheit                     301      // 1 Bit, Bit 5
 #define     LOG_DeutscheEinheitMask 0x20
 #define     LOG_DeutscheEinheitShift 5
-#define LOG_Nationalfeiertag                    239      // 1 Bit, Bit 1
+#define LOG_Nationalfeiertag                    302      // 1 Bit, Bit 1
 #define     LOG_NationalfeiertagMask 0x02
 #define     LOG_NationalfeiertagShift 1
-#define LOG_Reformationstag                     238      // 1 Bit, Bit 4
+#define LOG_Reformationstag                     301      // 1 Bit, Bit 4
 #define     LOG_ReformationstagMask 0x10
 #define     LOG_ReformationstagShift 4
-#define LOG_Allerheiligen                       238      // 1 Bit, Bit 3
+#define LOG_Allerheiligen                       301      // 1 Bit, Bit 3
 #define     LOG_AllerheiligenMask 0x08
 #define     LOG_AllerheiligenShift 3
-#define LOG_BussBettag                          238      // 1 Bit, Bit 2
+#define LOG_BussBettag                          301      // 1 Bit, Bit 2
 #define     LOG_BussBettagMask 0x04
 #define     LOG_BussBettagShift 2
-#define LOG_MariaEmpfaengnis                    239      // 1 Bit, Bit 0
+#define LOG_MariaEmpfaengnis                    302      // 1 Bit, Bit 0
 #define     LOG_MariaEmpfaengnisMask 0x01
 #define     LOG_MariaEmpfaengnisShift 0
-#define LOG_Advent1                             238      // 1 Bit, Bit 1
+#define LOG_Advent1                             301      // 1 Bit, Bit 1
 #define     LOG_Advent1Mask 0x02
 #define     LOG_Advent1Shift 1
-#define LOG_Advent2                             238      // 1 Bit, Bit 0
+#define LOG_Advent2                             301      // 1 Bit, Bit 0
 #define     LOG_Advent2Mask 0x01
 #define     LOG_Advent2Shift 0
-#define LOG_Advent3                             239      // 1 Bit, Bit 7
+#define LOG_Advent3                             302      // 1 Bit, Bit 7
 #define     LOG_Advent3Mask 0x80
 #define     LOG_Advent3Shift 7
-#define LOG_Advent4                             239      // 1 Bit, Bit 6
+#define LOG_Advent4                             302      // 1 Bit, Bit 6
 #define     LOG_Advent4Mask 0x40
 #define     LOG_Advent4Shift 6
-#define LOG_Heiligabend                         239      // 1 Bit, Bit 5
+#define LOG_Heiligabend                         302      // 1 Bit, Bit 5
 #define     LOG_HeiligabendMask 0x20
 #define     LOG_HeiligabendShift 5
-#define LOG_Weihnachtstag1                      239      // 1 Bit, Bit 4
+#define LOG_Weihnachtstag1                      302      // 1 Bit, Bit 4
 #define     LOG_Weihnachtstag1Mask 0x10
 #define     LOG_Weihnachtstag1Shift 4
-#define LOG_Weihnachtstag2                      239      // 1 Bit, Bit 3
+#define LOG_Weihnachtstag2                      302      // 1 Bit, Bit 3
 #define     LOG_Weihnachtstag2Mask 0x08
 #define     LOG_Weihnachtstag2Shift 3
-#define LOG_Silvester                           239      // 1 Bit, Bit 2
+#define LOG_Silvester                           302      // 1 Bit, Bit 2
 #define     LOG_SilvesterMask 0x04
 #define     LOG_SilvesterShift 2
-#define LOG_BuzzerSilent                        240      // uint16_t
-#define LOG_BuzzerNormal                        242      // uint16_t
-#define LOG_BuzzerLoud                          244      // uint16_t
-#define LOG_VisibleChannels                     246      // uint8_t
-#define LOG_LedMapping                          247      // 3 Bits, Bit 7-5
+#define LOG_BuzzerSilent                        303      // uint16_t
+#define LOG_BuzzerNormal                        305      // uint16_t
+#define LOG_BuzzerLoud                          307      // uint16_t
+#define LOG_VisibleChannels                     309      // uint8_t
+#define LOG_LedMapping                          310      // 3 Bits, Bit 7-5
 #define     LOG_LedMappingMask 0xE0
 #define     LOG_LedMappingShift 5
 
@@ -886,7 +834,7 @@
 #define LOG_ChannelCount 1
 
 // Parameter per channel
-#define LOG_ParamBlockOffset 248
+#define LOG_ParamBlockOffset 311
 #define LOG_ParamBlockSize 86
 #define LOG_ParamCalcIndex(index) (index + LOG_ParamBlockOffset + _channelIndex * LOG_ParamBlockSize)
 
@@ -2570,7 +2518,7 @@
 #define BASE_KommentarModuleModuleParamSize 0
 #define BASE_KommentarModuleSubmodulesParamSize 0
 #define BASE_KommentarModuleParamSize 0
-#define BASE_KommentarModuleParamOffset 334
+#define BASE_KommentarModuleParamOffset 397
 #define BASE_KommentarModuleCalcIndex(index, m1) (index + BASE_KommentarModuleParamOffset + _channelIndex * BASE_KommentarModuleCount * BASE_KommentarModuleParamSize + m1 * BASE_KommentarModuleParamSize)
 
 

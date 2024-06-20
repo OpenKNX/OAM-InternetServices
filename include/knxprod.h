@@ -1,4 +1,7 @@
 #pragma once
+#ifdef SHUTTER_CONTROLLER_MODULE
+#include "InternetServicesESP32-Test.h"
+#else
 #ifdef BETAXML
 
 // BETA
@@ -15,5 +18,6 @@
 #include "knxprodESP32-Dev.h"
 #else
 #include "knxprodRP2040-Dev.h"
+#endif
 #endif
 #endif
