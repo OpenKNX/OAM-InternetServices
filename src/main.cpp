@@ -1,7 +1,7 @@
 #include "OpenKNX.h"
 //#include "Logic.h"
 #ifdef IW_ChannelCount
-#include "InternetWeatherModule.h"
+//#include "InternetWeatherModule.h"
 #endif
 #ifdef ARDUINO_ARCH_ESP32
 #include "WLANModule.h"
@@ -33,10 +33,48 @@ AutoConnectConfig config;
 
 #include "HTTPClient.h"
 
+#define Abc_LeftShift 2 
+#define Abc_Shift 1
+#define Abc_Mask 0x3E 
+#define Abc_Sign 0x20
+#define Abc_Neg 0xE0
+
+void test()
+{
+    Serial.println("Test");
+    uint8_t config = 0b11110111;
+    int8_t result = (int8_t)(config << Abc_LeftShift) >> (Abc_LeftShift + Abc_Shift);
+    Serial.println("config: ");
+    Serial.println(config, BIN);
+    Serial.println("result: ");
+    Serial.println(result, BIN);
+    Serial.println(result, DEC);
+
+    int8_t result2 = ((config & Abc_Mask) >> Abc_Shift) | ((config & Abc_Sign) > 0 ? Abc_Neg : 0);
+    Serial.println("result2: ");
+    Serial.println(result2, BIN);
+    Serial.println(result2, DEC);
+
+    config = 0b00110110;
+    result = (int8_t)(config << Abc_LeftShift) >> (Abc_LeftShift + Abc_Shift);
+    Serial.println("config: ");
+    Serial.println(config, BIN);
+    Serial.println("result: ");
+    Serial.println(result, BIN);
+    Serial.println(result, DEC);
+
+    result2 = ((config & Abc_Mask) >> Abc_Shift) | ((config & Abc_Sign) > 0 ? Abc_Neg : 0);
+    Serial.println("result2: ");
+    Serial.println(result2, BIN);
+    Serial.println(result2, DEC);
+}
+
+
 void setup()
 {    
     const uint8_t firmwareRevision = 1;
     openknx.init(firmwareRevision);
+    test();
 #ifdef WLAN_WifiSSID    
     openknx.addModule(1, openknxWLANModule);
 #endif
@@ -47,7 +85,7 @@ void setup()
     openknx.addModule(2, openknxLogic);
 #endif
 #ifdef IW_ChannelCount
-    openknx.addModule(3, openknxInternetWeatherModule);
+   // openknx.addModule(3, openknxInternetWeatherModule);
 #endif
 #ifdef ARDUINO_ARCH_ESP32    
 #ifdef WLAN_WifiSSID 
@@ -72,7 +110,11 @@ void setup()
     Portal.begin();
 #endif
 
+
 }
+
+#define Abc_Shift 1
+#define Abc_Offset 0x3E
 
 void loop()
 {
