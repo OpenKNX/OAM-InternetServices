@@ -32,6 +32,8 @@ AutoConnectConfig config;
 #endif
 
 #include "HTTPClient.h"
+#include "time.h"
+#include <sys/time.h>
 
 #define Abc_LeftShift 2 
 #define Abc_Shift 1
@@ -69,11 +71,80 @@ void test()
     Serial.println(result2, DEC);
 }
 
+void setLocalTime()
+{
+
+    // Set local time
+    setenv("TZ", "CET-1CEST,M3.5.0/02,M10.5.0/03", 1);
+
+    tm tm{}; // Zero initialise
+    tm.tm_year = 2074 - 1900; 
+    tm.tm_mon = 10 - 1; 
+    tm.tm_mday = 27; 
+    tm.tm_hour = 2;
+    tm.tm_min = 30;
+    tm.tm_isdst = 1; 
+    std::time_t epoch = mktime(&tm); 
+    struct timeval tv;
+    tv.tv_sec = epoch;
+    tv.tv_usec = 0;
+
+    settimeofday(&tv, NULL);
+
+
+    time_t now;
+    time(&now);
+    Serial.println(sizeof(time_t));
+    Serial.print("Local: ");
+    Serial.println(asctime(localtime(&now)));
+    Serial.print("UTC: ");
+    Serial.println(asctime(gmtime(&now)));
+
+}
+
+void setUTCTime()
+{
+    setenv("TZ", "CET-1CEST,M3.5.0/02,M10.5.0/03", 1);
+
+    // Set utc time
+  
+    tm tm{}; // Zero initialise
+    tm.tm_year = 2024 - 1900; 
+    tm.tm_mon = 10 - 1; 
+    tm.tm_mday = 27; 
+    tm.tm_hour = 03;
+    tm.tm_min = 30;
+    
+    std::time_t epoch = mktime(&tm) - _timezone;   
+  
+
+    struct timeval tv;
+    tv.tv_sec = epoch;
+    tv.tv_usec = 0; 
+    settimeofday(&tv, NULL);
+
+
+
+    time_t now;
+    time(&now);
+   
+    Serial.print("Local: ");
+    Serial.println(asctime(localtime(&now)));
+    Serial.print("UTC: ");
+    Serial.println(asctime(gmtime(&now)));
+
+}
 
 void setup()
 {    
+
+
     const uint8_t firmwareRevision = 1;
     openknx.init(firmwareRevision);
+
+
+    setLocalTime();
+   //     setUTCTime();
     test();
 #ifdef WLAN_WifiSSID    
     openknx.addModule(1, openknxWLANModule);
