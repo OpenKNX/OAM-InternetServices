@@ -9,15 +9,13 @@
                                          (time & 0x3FFF) * 3600000 ) : 0 )
                                              
 #define MAIN_OpenKnxId 0xAE
-#define MAIN_ApplicationNumber 47
-#define MAIN_ApplicationVersion 13
-#define MAIN_ParameterSize 4911
-#define MAIN_MaxKoNumber 1409
+#define MAIN_ApplicationNumber 48
+#define MAIN_ApplicationVersion 6
+#define MAIN_ParameterSize 358
+#define MAIN_MaxKoNumber 507
 #define MAIN_OrderNumber "MGKnxINET"
 #define BASE_ModuleVersion 18
-#define WLAN_ModuleVersion 0
-#define IW_ModuleVersion 1
-#define SIP_ModuleVersion 2
+#define UCT_ModuleVersion 1
 #define SHC_ModuleVersion 0
 #define LOG_ModuleVersion 49
 // Parameter with single occurrence
@@ -146,470 +144,25 @@
 // Speichern
 #define KoBASE_ManualSave                          (knx.getGroupObject(BASE_KoManualSave))
 
-#define WLAN_WifiSSID                            46      // char*, 32 Byte
-#define WLAN_WifiPassword                        79      // char*, 63 Byte
 
-// SSID
-#define ParamWLAN_WifiSSID                            (knx.paramData(WLAN_WifiSSID))
-// Passswort
-#define ParamWLAN_WifiPassword                        (knx.paramData(WLAN_WifiPassword))
 
-#define WLAN_KoWLANState 20
-
-// WLAN Status
-#define KoWLAN_WLANState                           (knx.getGroupObject(WLAN_KoWLANState))
-
-#define IW_IWNumChannels                       143      // uint8_t
-#define IW_APIKey                              144      // char*, 40 Byte
-#define IW_WeatherRefreshInterval              185      // 8 Bits, Bit 7-0
-#define IW_WeatherConditionCurrentDayPrefix    186      // char*, 1 Byte
-#define IW_WeatherConditionNextDayPrefix       188      // char*, 1 Byte
-#define IW_WeatherConditionSun                 190      // char*, 13 Byte
-#define IW_WeatherConditionClouds              205      // char*, 13 Byte
-#define IW_WeatherConditionRain                220      // char*, 13 Byte
-#define IW_WeatherConditionSnow                235      // char*, 13 Byte
-
-// Verfügbare Kanäle
-#define ParamIW_IWNumChannels                       (knx.paramByte(IW_IWNumChannels))
-// API Key
-#define ParamIW_APIKey                              (knx.paramData(IW_APIKey))
-// Automatische Aktualisierung
-#define ParamIW_WeatherRefreshInterval              (knx.paramByte(IW_WeatherRefreshInterval))
-// Aktueller Tag
-#define ParamIW_WeatherConditionCurrentDayPrefix    (knx.paramData(IW_WeatherConditionCurrentDayPrefix))
-// Nächster Tag
-#define ParamIW_WeatherConditionNextDayPrefix       (knx.paramData(IW_WeatherConditionNextDayPrefix))
-// Sonne
-#define ParamIW_WeatherConditionSun                 (knx.paramData(IW_WeatherConditionSun))
-// Wolken
-#define ParamIW_WeatherConditionClouds              (knx.paramData(IW_WeatherConditionClouds))
-// Regen
-#define ParamIW_WeatherConditionRain                (knx.paramData(IW_WeatherConditionRain))
-// Schnee
-#define ParamIW_WeatherConditionSnow                (knx.paramData(IW_WeatherConditionSnow))
-
-#define IW_KoRefreshWeatherData 400
-
-// Wetterdaten aktualisieren
-#define KoIW_RefreshWeatherData                  (knx.getGroupObject(IW_KoRefreshWeatherData))
-
-#define IW_ChannelCount 5
-
-// Parameter per channel
-#define IW_ParamBlockOffset 250
-#define IW_ParamBlockSize 10
-#define IW_ParamCalcIndex(index) (index + IW_ParamBlockOffset + _channelIndex * IW_ParamBlockSize)
-
-#define IW_CHWeatherChannelType                 0      // 8 Bits, Bit 7-0
-#define IW_CHWeatherLocationType                1      // 1 Bit, Bit 7
-#define     IW_CHWeatherLocationTypeMask 0x80
-#define     IW_CHWeatherLocationTypeShift 7
-#define IW_CHLatitude                           2      // float
-#define IW_CHLongitude                          6      // float
-
-// Wetterdienst
-#define ParamIW_CHWeatherChannelType                (knx.paramByte(IW_ParamCalcIndex(IW_CHWeatherChannelType)))
-// Ort für Wetter
-#define ParamIW_CHWeatherLocationType               ((bool)(knx.paramByte(IW_ParamCalcIndex(IW_CHWeatherLocationType)) & IW_CHWeatherLocationTypeMask))
-// Breitengrad
-#define ParamIW_CHLatitude                          (knx.paramFloat(IW_ParamCalcIndex(IW_CHLatitude), Float_Enc_IEEE754Single))
-// Längengrad
-#define ParamIW_CHLongitude                         (knx.paramFloat(IW_ParamCalcIndex(IW_CHLongitude), Float_Enc_IEEE754Single))
-
-// deprecated
-#define IW_KoOffset 410
-
-// Communication objects per channel (multiple occurrence)
-#define IW_KoBlockOffset 410
-#define IW_KoBlockSize 102
-
-#define IW_KoCalcNumber(index) (index + IW_KoBlockOffset + _channelIndex * IW_KoBlockSize)
-#define IW_KoCalcIndex(number) ((number >= IW_KoCalcNumber(0) && number < IW_KoCalcNumber(IW_KoBlockSize)) ? (number - IW_KoBlockOffset) % IW_KoBlockSize : -1)
-#define IW_KoCalcChannel(number) ((number >= IW_KoBlockOffset && number < IW_KoBlockOffset + IW_ChannelCount * IW_KoBlockSize) ? (number - IW_KoBlockOffset) / IW_KoBlockSize : -1)
-
-#define IW_KoCHHTTPStatus 0
-#define IW_KoCHCurrentTemparatur 1
-#define IW_KoCHCurrentTemparaturFeelsLike 2
-#define IW_KoCHCurrentHumidity 3
-#define IW_KoCHCurrentPressure 4
-#define IW_KoCHCurrentWind 5
-#define IW_KoCHCurrentWindGust 6
-#define IW_KoCHCurrentWindDirection 7
-#define IW_KoCHCurrentRain 8
-#define IW_KoCHCurrentSnow 9
-#define IW_KoCHCurrentUVI 10
-#define IW_KoCHCurrentClouds 11
-#define IW_KoCHTodayDescription 12
-#define IW_KoCHTodayTemparaturDay 13
-#define IW_KoCHTodayTemparaturNight 14
-#define IW_KoCHTodayTemparaturMorning 15
-#define IW_KoCHTodayTemparaturEvening 16
-#define IW_KoCHTodayTemparaturMin 17
-#define IW_KoCHTodayTemparaturMax 18
-#define IW_KoCHTodayTemparaturDayFeelsLike 19
-#define IW_KoCHTodayTemparaturNightFeelsLike 20
-#define IW_KoCHTodayTemparaturMorningFeelsLike 21
-#define IW_KoCHTodayTemparaturEveningFeelsLike 22
-#define IW_KoCHTodayHumidity 23
-#define IW_KoCHTodayPressure 24
-#define IW_KoCHTodayWind 25
-#define IW_KoCHTodayWindGust 26
-#define IW_KoCHTodayWindDirection 27
-#define IW_KoCHTodayRain 28
-#define IW_KoCHTodaySnow 29
-#define IW_KoCHTodayProbabilityOfPrecipitation 30
-#define IW_KoCHTodayUVI 31
-#define IW_KoCHTodayClouds 32
-#define IW_KoCHTomorrowDescription 33
-#define IW_KoCHTomorrowTemparaturDay 34
-#define IW_KoCHTomorrowTemparaturNight 35
-#define IW_KoCHTomorrowTemparaturMorning 36
-#define IW_KoCHTomorrowTemparaturEvening 37
-#define IW_KoCHTomorrowTemparaturMin 38
-#define IW_KoCHTomorrowTemparaturMax 39
-#define IW_KoCHTomorrowTemparaturDayFeelsLike 40
-#define IW_KoCHTomorrowTemparaturNightFeelsLike 41
-#define IW_KoCHTomorrowTemparaturMorningFeelsLike 42
-#define IW_KoCHTomorrowTemparaturEveningFeelsLike 43
-#define IW_KoCHTomorrowHumidity 44
-#define IW_KoCHTomorrowPressure 45
-#define IW_KoCHTomorrowWind 46
-#define IW_KoCHTomorrowWindGust 47
-#define IW_KoCHTomorrowWindDirection 48
-#define IW_KoCHTomorrowRain 49
-#define IW_KoCHTomorrowSnow 50
-#define IW_KoCHTomorrowProbabilityOfPrecipitation 51
-#define IW_KoCHTomorrowUVI 52
-#define IW_KoCHTomorrowClouds 53
-#define IW_KoCHForecastSelection 54
-#define IW_KoCHForecastDescription 55
-#define IW_KoCHForecastTemparaturDay 56
-#define IW_KoCHForecastTemparaturNight 57
-#define IW_KoCHForecastTemparaturMorning 58
-#define IW_KoCHForecastTemparaturEvening 59
-#define IW_KoCHForecastTemparaturMin 60
-#define IW_KoCHForecastTemparaturMax 61
-#define IW_KoCHForecastTemparaturDayFeelsLike 62
-#define IW_KoCHForecastTemparaturNightFeelsLike 63
-#define IW_KoCHForecastTemparaturMorningFeelsLike 64
-#define IW_KoCHForecastTemparaturEveningFeelsLike 65
-#define IW_KoCHForecastHumidity 66
-#define IW_KoCHForecastPressure 67
-#define IW_KoCHForecastWind 68
-#define IW_KoCHForecastWindGust 69
-#define IW_KoCHForecastWindDirection 70
-#define IW_KoCHForecastRain 71
-#define IW_KoCHForecastSnow 72
-#define IW_KoCHForecastProbabilityOfPrecipitation 73
-#define IW_KoCHForecastUVI 74
-#define IW_KoCHForecastClouds 75
-#define IW_KoCHHour1Description 76
-#define IW_KoCHHour1Temparatur 77
-#define IW_KoCHHour1TemparaturFeelsLike 78
-#define IW_KoCHHour1Humidity 79
-#define IW_KoCHHour1Pressure 80
-#define IW_KoCHHour1Wind 81
-#define IW_KoCHHour1WindGust 82
-#define IW_KoCHHour1WindDirection 83
-#define IW_KoCHHour1Rain 84
-#define IW_KoCHHour1Snow 85
-#define IW_KoCHHour1ProbabilityOfPrecipitation 86
-#define IW_KoCHHour1UVI 87
-#define IW_KoCHHour1Clouds 88
-#define IW_KoCHHour2Description 89
-#define IW_KoCHHour2Temparatur 90
-#define IW_KoCHHour2TemparaturFeelsLike 91
-#define IW_KoCHHour2Humidity 92
-#define IW_KoCHHour2Pressure 93
-#define IW_KoCHHour2Wind 94
-#define IW_KoCHHour2WindGust 95
-#define IW_KoCHHour2WindDirection 96
-#define IW_KoCHHour2Rain 97
-#define IW_KoCHHour2Snow 98
-#define IW_KoCHHour2ProbabilityOfPrecipitation 99
-#define IW_KoCHHour2UVI 100
-#define IW_KoCHHour2Clouds 101
-
-// 
-#define KoIW_CHHTTPStatus                        (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHTTPStatus)))
-// 
-#define KoIW_CHCurrentTemparatur                 (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentTemparatur)))
-// 
-#define KoIW_CHCurrentTemparaturFeelsLike        (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentTemparaturFeelsLike)))
-// 
-#define KoIW_CHCurrentHumidity                   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentHumidity)))
-// 
-#define KoIW_CHCurrentPressure                   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentPressure)))
-// 
-#define KoIW_CHCurrentWind                       (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentWind)))
-// 
-#define KoIW_CHCurrentWindGust                   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentWindGust)))
-// 
-#define KoIW_CHCurrentWindDirection              (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentWindDirection)))
-// 
-#define KoIW_CHCurrentRain                       (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentRain)))
-// 
-#define KoIW_CHCurrentSnow                       (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentSnow)))
-// 
-#define KoIW_CHCurrentUVI                        (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentUVI)))
-// 
-#define KoIW_CHCurrentClouds                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHCurrentClouds)))
-// 
-#define KoIW_CHTodayDescription                  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayDescription)))
-// 
-#define KoIW_CHTodayTemparaturDay                (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturDay)))
-// 
-#define KoIW_CHTodayTemparaturNight              (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturNight)))
-// 
-#define KoIW_CHTodayTemparaturMorning            (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturMorning)))
-// 
-#define KoIW_CHTodayTemparaturEvening            (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturEvening)))
-// 
-#define KoIW_CHTodayTemparaturMin                (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturMin)))
-// 
-#define KoIW_CHTodayTemparaturMax                (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturMax)))
-// 
-#define KoIW_CHTodayTemparaturDayFeelsLike       (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturDayFeelsLike)))
-// 
-#define KoIW_CHTodayTemparaturNightFeelsLike     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturNightFeelsLike)))
-// 
-#define KoIW_CHTodayTemparaturMorningFeelsLike   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturMorningFeelsLike)))
-// 
-#define KoIW_CHTodayTemparaturEveningFeelsLike   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayTemparaturEveningFeelsLike)))
-// 
-#define KoIW_CHTodayHumidity                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayHumidity)))
-// 
-#define KoIW_CHTodayPressure                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayPressure)))
-// 
-#define KoIW_CHTodayWind                         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayWind)))
-// 
-#define KoIW_CHTodayWindGust                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayWindGust)))
-// 
-#define KoIW_CHTodayWindDirection                (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayWindDirection)))
-// 
-#define KoIW_CHTodayRain                         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayRain)))
-// 
-#define KoIW_CHTodaySnow                         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodaySnow)))
-// 
-#define KoIW_CHTodayProbabilityOfPrecipitation   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayProbabilityOfPrecipitation)))
-// 
-#define KoIW_CHTodayUVI                          (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayUVI)))
-// 
-#define KoIW_CHTodayClouds                       (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTodayClouds)))
-// 
-#define KoIW_CHTomorrowDescription               (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowDescription)))
-// 
-#define KoIW_CHTomorrowTemparaturDay             (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturDay)))
-// 
-#define KoIW_CHTomorrowTemparaturNight           (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturNight)))
-// 
-#define KoIW_CHTomorrowTemparaturMorning         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturMorning)))
-// 
-#define KoIW_CHTomorrowTemparaturEvening         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturEvening)))
-// 
-#define KoIW_CHTomorrowTemparaturMin             (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturMin)))
-// 
-#define KoIW_CHTomorrowTemparaturMax             (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturMax)))
-// 
-#define KoIW_CHTomorrowTemparaturDayFeelsLike    (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturDayFeelsLike)))
-// 
-#define KoIW_CHTomorrowTemparaturNightFeelsLike  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturNightFeelsLike)))
-// 
-#define KoIW_CHTomorrowTemparaturMorningFeelsLike (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturMorningFeelsLike)))
-// 
-#define KoIW_CHTomorrowTemparaturEveningFeelsLike (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowTemparaturEveningFeelsLike)))
-// 
-#define KoIW_CHTomorrowHumidity                  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowHumidity)))
-// 
-#define KoIW_CHTomorrowPressure                  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowPressure)))
-// 
-#define KoIW_CHTomorrowWind                      (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowWind)))
-// 
-#define KoIW_CHTomorrowWindGust                  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowWindGust)))
-// 
-#define KoIW_CHTomorrowWindDirection             (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowWindDirection)))
-// 
-#define KoIW_CHTomorrowRain                      (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowRain)))
-// 
-#define KoIW_CHTomorrowSnow                      (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowSnow)))
-// 
-#define KoIW_CHTomorrowProbabilityOfPrecipitation (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowProbabilityOfPrecipitation)))
-// 
-#define KoIW_CHTomorrowUVI                       (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowUVI)))
-// 
-#define KoIW_CHTomorrowClouds                    (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHTomorrowClouds)))
-// 
-#define KoIW_CHForecastSelection                 (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastSelection)))
-// 
-#define KoIW_CHForecastDescription               (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastDescription)))
-// 
-#define KoIW_CHForecastTemparaturDay             (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturDay)))
-// 
-#define KoIW_CHForecastTemparaturNight           (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturNight)))
-// 
-#define KoIW_CHForecastTemparaturMorning         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturMorning)))
-// 
-#define KoIW_CHForecastTemparaturEvening         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturEvening)))
-// 
-#define KoIW_CHForecastTemparaturMin             (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturMin)))
-// 
-#define KoIW_CHForecastTemparaturMax             (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturMax)))
-// 
-#define KoIW_CHForecastTemparaturDayFeelsLike    (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturDayFeelsLike)))
-// 
-#define KoIW_CHForecastTemparaturNightFeelsLike  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturNightFeelsLike)))
-// 
-#define KoIW_CHForecastTemparaturMorningFeelsLike (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturMorningFeelsLike)))
-// 
-#define KoIW_CHForecastTemparaturEveningFeelsLike (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastTemparaturEveningFeelsLike)))
-// 
-#define KoIW_CHForecastHumidity                  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastHumidity)))
-// 
-#define KoIW_CHForecastPressure                  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastPressure)))
-// 
-#define KoIW_CHForecastWind                      (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastWind)))
-// 
-#define KoIW_CHForecastWindGust                  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastWindGust)))
-// 
-#define KoIW_CHForecastWindDirection             (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastWindDirection)))
-// 
-#define KoIW_CHForecastRain                      (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastRain)))
-// 
-#define KoIW_CHForecastSnow                      (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastSnow)))
-// 
-#define KoIW_CHForecastProbabilityOfPrecipitation (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastProbabilityOfPrecipitation)))
-// 
-#define KoIW_CHForecastUVI                       (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastUVI)))
-// 
-#define KoIW_CHForecastClouds                    (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHForecastClouds)))
-// 
-#define KoIW_CHHour1Description                  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1Description)))
-// 
-#define KoIW_CHHour1Temparatur                   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1Temparatur)))
-// 
-#define KoIW_CHHour1TemparaturFeelsLike          (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1TemparaturFeelsLike)))
-// 
-#define KoIW_CHHour1Humidity                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1Humidity)))
-// 
-#define KoIW_CHHour1Pressure                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1Pressure)))
-// 
-#define KoIW_CHHour1Wind                         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1Wind)))
-// 
-#define KoIW_CHHour1WindGust                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1WindGust)))
-// 
-#define KoIW_CHHour1WindDirection                (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1WindDirection)))
-// 
-#define KoIW_CHHour1Rain                         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1Rain)))
-// 
-#define KoIW_CHHour1Snow                         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1Snow)))
-// 
-#define KoIW_CHHour1ProbabilityOfPrecipitation   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1ProbabilityOfPrecipitation)))
-// 
-#define KoIW_CHHour1UVI                          (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1UVI)))
-// 
-#define KoIW_CHHour1Clouds                       (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour1Clouds)))
-// 
-#define KoIW_CHHour2Description                  (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2Description)))
-// 
-#define KoIW_CHHour2Temparatur                   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2Temparatur)))
-// 
-#define KoIW_CHHour2TemparaturFeelsLike          (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2TemparaturFeelsLike)))
-// 
-#define KoIW_CHHour2Humidity                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2Humidity)))
-// 
-#define KoIW_CHHour2Pressure                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2Pressure)))
-// 
-#define KoIW_CHHour2Wind                         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2Wind)))
-// 
-#define KoIW_CHHour2WindGust                     (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2WindGust)))
-// 
-#define KoIW_CHHour2WindDirection                (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2WindDirection)))
-// 
-#define KoIW_CHHour2Rain                         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2Rain)))
-// 
-#define KoIW_CHHour2Snow                         (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2Snow)))
-// 
-#define KoIW_CHHour2ProbabilityOfPrecipitation   (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2ProbabilityOfPrecipitation)))
-// 
-#define KoIW_CHHour2UVI                          (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2UVI)))
-// 
-#define KoIW_CHHour2Clouds                       (knx.getGroupObject(IW_KoCalcNumber(IW_KoCHHour2Clouds)))
-
-#define SIP_SIPNumChannels                      300      // uint8_t
-#define SIP_UseIPGateway                        301      // 1 Bit, Bit 7
-#define     SIP_UseIPGatewayMask 0x80
-#define     SIP_UseIPGatewayShift 7
-#define SIP_SIPGatewayIP                        302      // IP address, 4 Byte
-#define SIP_SIPGatewayPort                      306      // uint16_t
-#define SIP_SIPUser                             308      // char*, 30 Byte
-#define SIP_SIPPassword                         339      // char*, 30 Byte
-
-// Verfügbare Kanäle
-#define ParamSIP_SIPNumChannels                      (knx.paramByte(SIP_SIPNumChannels))
-// IP Gateway ist SIP Gateway (z.B. FRITZ!Box)
-#define ParamSIP_UseIPGateway                        ((bool)(knx.paramByte(SIP_UseIPGateway) & SIP_UseIPGatewayMask))
-// SIP Gateway IP
-#define ParamSIP_SIPGatewayIP                        (knx.paramInt(SIP_SIPGatewayIP))
-// SIP Gateway Port
-#define ParamSIP_SIPGatewayPort                      (knx.paramWord(SIP_SIPGatewayPort))
-// Benutzername
-#define ParamSIP_SIPUser                             (knx.paramData(SIP_SIPUser))
-// Passwort
-#define ParamSIP_SIPPassword                         (knx.paramData(SIP_SIPPassword))
-
-#define SIP_KoGatewayConnectionState 985
-
-// SIP Gateway Verbindungsstatus
-#define KoSIP_GatewayConnectionState              (knx.getGroupObject(SIP_KoGatewayConnectionState))
-
-#define SIP_ChannelCount 5
-
-// Parameter per channel
-#define SIP_ParamBlockOffset 370
-#define SIP_ParamBlockSize 17
-#define SIP_ParamCalcIndex(index) (index + SIP_ParamBlockOffset + _channelIndex * SIP_ParamBlockSize)
-
-#define SIP_CHPhoneNumber                        0      // char*, 15 Byte
-#define SIP_CHCancelCall                        16      // uint8_t
-
-// Telefonnummer
-#define ParamSIP_CHPhoneNumber                       (knx.paramData(SIP_ParamCalcIndex(SIP_CHPhoneNumber)))
-// Anruf beenden nach
-#define ParamSIP_CHCancelCall                        (knx.paramByte(SIP_ParamCalcIndex(SIP_CHCancelCall)))
-
-// deprecated
-#define SIP_KoOffset 980
-
-// Communication objects per channel (multiple occurrence)
-#define SIP_KoBlockOffset 980
-#define SIP_KoBlockSize 1
-
-#define SIP_KoCalcNumber(index) (index + SIP_KoBlockOffset + _channelIndex * SIP_KoBlockSize)
-#define SIP_KoCalcIndex(number) ((number >= SIP_KoCalcNumber(0) && number < SIP_KoCalcNumber(SIP_KoBlockSize)) ? (number - SIP_KoBlockOffset) % SIP_KoBlockSize : -1)
-#define SIP_KoCalcChannel(number) ((number >= SIP_KoBlockOffset && number < SIP_KoBlockOffset + SIP_ChannelCount * SIP_KoBlockSize) ? (number - SIP_KoBlockOffset) / SIP_KoBlockSize : -1)
-
-#define SIP_KoCHPhoneNumber 0
-
-// 
-#define KoSIP_CHPhoneNumber                       (knx.getGroupObject(SIP_KoCalcNumber(SIP_KoCHPhoneNumber)))
-
-#define SHC_VisibleChannels                     455      // uint8_t
-#define SHC_HasTemperaturInput                  456      // 1 Bit, Bit 7
+#define SHC_VisibleChannels                     46      // uint8_t
+#define SHC_HasTemperaturInput                  47      // 1 Bit, Bit 7
 #define     SHC_HasTemperaturInputMask 0x80
 #define     SHC_HasTemperaturInputShift 7
-#define SHC_HasTemperaturForecastInput          456      // 1 Bit, Bit 6
+#define SHC_HasTemperaturForecastInput          47      // 1 Bit, Bit 6
 #define     SHC_HasTemperaturForecastInputMask 0x40
 #define     SHC_HasTemperaturForecastInputShift 6
-#define SHC_HasBrightnessInput                  456      // 1 Bit, Bit 5
+#define SHC_HasBrightnessInput                  47      // 1 Bit, Bit 5
 #define     SHC_HasBrightnessInputMask 0x20
 #define     SHC_HasBrightnessInputShift 5
-#define SHC_HasUVIInput                         456      // 1 Bit, Bit 4
+#define SHC_HasUVIInput                         47      // 1 Bit, Bit 4
 #define     SHC_HasUVIInputMask 0x10
 #define     SHC_HasUVIInputShift 4
-#define SHC_HasRainInput                        456      // 1 Bit, Bit 3
+#define SHC_HasRainInput                        47      // 1 Bit, Bit 3
 #define     SHC_HasRainInputMask 0x08
 #define     SHC_HasRainInputShift 3
-#define SHC_HasCloudsInput                      456      // 1 Bit, Bit 2
+#define SHC_HasCloudsInput                      47      // 1 Bit, Bit 2
 #define     SHC_HasCloudsInputMask 0x04
 #define     SHC_HasCloudsInputShift 2
 
@@ -628,14 +181,14 @@
 // Wolken
 #define ParamSHC_HasCloudsInput                      ((bool)(knx.paramByte(SHC_HasCloudsInput) & SHC_HasCloudsInputMask))
 
-#define SHC_KoShadingControlDailyActivation 1000
-#define SHC_KoShadingControlDailyActivationStatus 1001
-#define SHC_KoTemperatureInput 1002
-#define SHC_KoTemperatureForecastInput 1003
-#define SHC_KoBrightnessInput 1004
-#define SHC_KoUVIInput 1005
-#define SHC_KoRainInput 1006
-#define SHC_KoCloudsInput 1007
+#define SHC_KoShadingControlDailyActivation 400
+#define SHC_KoShadingControlDailyActivationStatus 401
+#define SHC_KoTemperatureInput 402
+#define SHC_KoTemperatureForecastInput 403
+#define SHC_KoBrightnessInput 404
+#define SHC_KoUVIInput 405
+#define SHC_KoRainInput 406
+#define SHC_KoCloudsInput 407
 
 // Beschattung täglich aktivieren
 #define KoSHC_ShadingControlDailyActivation       (knx.getGroupObject(SHC_KoShadingControlDailyActivation))
@@ -654,11 +207,11 @@
 // Wolken Eingang
 #define KoSHC_CloudsInput                         (knx.getGroupObject(SHC_KoCloudsInput))
 
-#define SHC_ChannelCount 10
+#define SHC_ChannelCount 2
 
 // Parameter per channel
-#define SHC_ParamBlockOffset 458
-#define SHC_ParamBlockSize 100
+#define SHC_ParamBlockOffset 49
+#define SHC_ParamBlockSize 105
 #define SHC_ParamCalcIndex(index) (index + SHC_ParamBlockOffset + _channelIndex * SHC_ParamBlockSize)
 
 #define SHC_ChannelType                          0      // 8 Bits, Bit 7-0
@@ -722,141 +275,153 @@
 #define SHC_ChannelNightModeStopSlatPosition    20      // 7 Bits, Bit 6-0
 #define     SHC_ChannelNightModeStopSlatPositionMask 0x7F
 #define     SHC_ChannelNightModeStopSlatPositionShift 0
-#define SHC_ChannelModeWindowOpen               21      // 1 Bit, Bit 7
-#define     SHC_ChannelModeWindowOpenMask 0x80
-#define     SHC_ChannelModeWindowOpenShift 7
-#define SHC_ChannelModeWindowOpenPositionControl 22      // 4 Bits, Bit 7-4
-#define     SHC_ChannelModeWindowOpenPositionControlMask 0xF0
-#define     SHC_ChannelModeWindowOpenPositionControlShift 4
-#define SHC_ChannelModeWindowOpenSlatPositionControl 22      // 4 Bits, Bit 3-0
-#define     SHC_ChannelModeWindowOpenSlatPositionControlMask 0x0F
-#define     SHC_ChannelModeWindowOpenSlatPositionControlShift 0
-#define SHC_ChannelModeWindowOpenPosition       23      // 7 Bits, Bit 7-1
-#define     SHC_ChannelModeWindowOpenPositionMask 0xFE
-#define     SHC_ChannelModeWindowOpenPositionShift 1
-#define SHC_ChannelModeWindowOpenSlatPosition   24      // 7 Bits, Bit 7-1
-#define     SHC_ChannelModeWindowOpenSlatPositionMask 0xFE
-#define     SHC_ChannelModeWindowOpenSlatPositionShift 1
-#define SHC_ChannelModeShading1                 25      // 1 Bit, Bit 7
+#define SHC_ChannelModeWindowOpenCount          21      // 4 Bits, Bit 7-4
+#define     SHC_ChannelModeWindowOpenCountMask 0xF0
+#define     SHC_ChannelModeWindowOpenCountShift 4
+#define SHC_ChannelModeWindowOpenPositionControl1 22      // 4 Bits, Bit 7-4
+#define     SHC_ChannelModeWindowOpenPositionControl1Mask 0xF0
+#define     SHC_ChannelModeWindowOpenPositionControl1Shift 4
+#define SHC_ChannelModeWindowOpenSlatPositionControl1 22      // 4 Bits, Bit 3-0
+#define     SHC_ChannelModeWindowOpenSlatPositionControl1Mask 0x0F
+#define     SHC_ChannelModeWindowOpenSlatPositionControl1Shift 0
+#define SHC_ChannelModeWindowOpenPosition1      23      // 7 Bits, Bit 7-1
+#define     SHC_ChannelModeWindowOpenPosition1Mask 0xFE
+#define     SHC_ChannelModeWindowOpenPosition1Shift 1
+#define SHC_ChannelModeWindowOpenSlatPosition1  24      // 7 Bits, Bit 7-1
+#define     SHC_ChannelModeWindowOpenSlatPosition1Mask 0xFE
+#define     SHC_ChannelModeWindowOpenSlatPosition1Shift 1
+#define SHC_ChannelModeWindowOpenPositionControl2 26      // 4 Bits, Bit 7-4
+#define     SHC_ChannelModeWindowOpenPositionControl2Mask 0xF0
+#define     SHC_ChannelModeWindowOpenPositionControl2Shift 4
+#define SHC_ChannelModeWindowOpenSlatPositionControl2 26      // 4 Bits, Bit 3-0
+#define     SHC_ChannelModeWindowOpenSlatPositionControl2Mask 0x0F
+#define     SHC_ChannelModeWindowOpenSlatPositionControl2Shift 0
+#define SHC_ChannelModeWindowOpenPosition2      27      // 7 Bits, Bit 7-1
+#define     SHC_ChannelModeWindowOpenPosition2Mask 0xFE
+#define     SHC_ChannelModeWindowOpenPosition2Shift 1
+#define SHC_ChannelModeWindowOpenSlatPosition2  28      // 7 Bits, Bit 7-1
+#define     SHC_ChannelModeWindowOpenSlatPosition2Mask 0xFE
+#define     SHC_ChannelModeWindowOpenSlatPosition2Shift 1
+#define SHC_ChannelModeShading1                 30      // 1 Bit, Bit 7
 #define     SHC_ChannelModeShading1Mask 0x80
 #define     SHC_ChannelModeShading1Shift 7
-#define SHC_ChannelModeShading1TemperatureActive 25      // 1 Bit, Bit 6
+#define SHC_ChannelModeShading1TemperatureActive 30      // 1 Bit, Bit 6
 #define     SHC_ChannelModeShading1TemperatureActiveMask 0x40
 #define     SHC_ChannelModeShading1TemperatureActiveShift 6
-#define SHC_ChannelModeShading1TemperatureForecast 25      // 1 Bit, Bit 5
+#define SHC_ChannelModeShading1TemperatureForecast 30      // 1 Bit, Bit 5
 #define     SHC_ChannelModeShading1TemperatureForecastMask 0x20
 #define     SHC_ChannelModeShading1TemperatureForecastShift 5
-#define SHC_ChannelModeShading1BrightnessActiv  25      // 1 Bit, Bit 4
+#define SHC_ChannelModeShading1BrightnessActiv  30      // 1 Bit, Bit 4
 #define     SHC_ChannelModeShading1BrightnessActivMask 0x10
 #define     SHC_ChannelModeShading1BrightnessActivShift 4
-#define SHC_ChannelModeShading1UVIActiv         25      // 1 Bit, Bit 3
+#define SHC_ChannelModeShading1UVIActiv         30      // 1 Bit, Bit 3
 #define     SHC_ChannelModeShading1UVIActivMask 0x08
 #define     SHC_ChannelModeShading1UVIActivShift 3
-#define SHC_ChannelModeShading1RainActiv        25      // 1 Bit, Bit 2
+#define SHC_ChannelModeShading1RainActiv        30      // 1 Bit, Bit 2
 #define     SHC_ChannelModeShading1RainActivMask 0x04
 #define     SHC_ChannelModeShading1RainActivShift 2
-#define SHC_ChannelModeShading1SlatElevationDepending 25      // 1 Bit, Bit 1
+#define SHC_ChannelModeShading1SlatElevationDepending 30      // 1 Bit, Bit 1
 #define     SHC_ChannelModeShading1SlatElevationDependingMask 0x02
 #define     SHC_ChannelModeShading1SlatElevationDependingShift 1
-#define SHC_ChannelModeShading1ShadingBreak     25      // 8 Bits, Bit 0--7
-#define SHC_ChannelModeShading1WaitTimeStart    26      // uint16_t
-#define SHC_ChannelModeShading1WaitTimeEnd      28      // uint16_t
-#define SHC_ChannelModeShading1AzimutMin        30      // uint16_t
-#define SHC_ChannelModeShading1AzimutMax        32      // uint16_t
-#define SHC_ChannelModeShading1ElevationMin     34      // uint8_t
-#define SHC_ChannelModeShading1ElevationMax     35      // uint8_t
-#define SHC_ChannelModeShading1TemperatureMin   36      // uint8_t
-#define SHC_ChannelModeShading1TemperatureForecastMin 37      // uint8_t
-#define SHC_ChannelModeShading1BrightnessMin    38      // uint8_t
-#define SHC_ChannelModeShading1Hysterese        39      // uint8_t
-#define SHC_ChannelModeShading1UVIMin           40      // float
-#define SHC_ChannelModeShading1Clouds           44      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading1ActivationOnlyIfLessThan 45      // 7 Bits, Bit 7-1
+#define SHC_ChannelModeShading1ShadingBreak     30      // 8 Bits, Bit 0--7
+#define SHC_ChannelModeShading1WaitTimeStart    31      // uint16_t
+#define SHC_ChannelModeShading1WaitTimeEnd      33      // uint16_t
+#define SHC_ChannelModeShading1AzimutMin        35      // uint16_t
+#define SHC_ChannelModeShading1AzimutMax        37      // uint16_t
+#define SHC_ChannelModeShading1ElevationMin     39      // uint8_t
+#define SHC_ChannelModeShading1ElevationMax     40      // uint8_t
+#define SHC_ChannelModeShading1TemperatureMin   41      // uint8_t
+#define SHC_ChannelModeShading1TemperatureForecastMin 42      // uint8_t
+#define SHC_ChannelModeShading1BrightnessMin    43      // uint8_t
+#define SHC_ChannelModeShading1Hysterese        44      // uint8_t
+#define SHC_ChannelModeShading1UVIMin           45      // float
+#define SHC_ChannelModeShading1Clouds           49      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading1ActivationOnlyIfLessThan 50      // 7 Bits, Bit 7-1
 #define     SHC_ChannelModeShading1ActivationOnlyIfLessThanMask 0xFE
 #define     SHC_ChannelModeShading1ActivationOnlyIfLessThanShift 1
-#define SHC_ChannelModeShading1ShadingPosition  46      // 7 Bits, Bit 7-1
+#define SHC_ChannelModeShading1ShadingPosition  51      // 7 Bits, Bit 7-1
 #define     SHC_ChannelModeShading1ShadingPositionMask 0xFE
 #define     SHC_ChannelModeShading1ShadingPositionShift 1
-#define SHC_ChannelModeShading1SlatShadingPosition 47      // 7 Bits, Bit 7-1
+#define SHC_ChannelModeShading1SlatShadingPosition 52      // 7 Bits, Bit 7-1
 #define     SHC_ChannelModeShading1SlatShadingPositionMask 0xFE
 #define     SHC_ChannelModeShading1SlatShadingPositionShift 1
-#define SHC_ChannelModeShading1MinChangeForSlatAdaption 48      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading1OffsetSlatPosition 49      // int8_t
-#define SHC_ChannelModeShading1ShadingBreakAzimutMin 50      // uint16_t
-#define SHC_ChannelModeShading1ShadingBreakAzimutMax 52      // uint16_t
-#define SHC_ChannelModeShading1ShadingBreakElevationMin 54      // uint8_t
-#define SHC_ChannelModeShading1ShadingBreakElevationMax 55      // uint8_t
-#define SHC_ChannelModeShading1RoomTemperaturActiv 56      // 1 Bit, Bit 7
+#define SHC_ChannelModeShading1MinChangeForSlatAdaption 53      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading1OffsetSlatPosition 54      // int8_t
+#define SHC_ChannelModeShading1ShadingBreakAzimutMin 55      // uint16_t
+#define SHC_ChannelModeShading1ShadingBreakAzimutMax 57      // uint16_t
+#define SHC_ChannelModeShading1ShadingBreakElevationMin 59      // uint8_t
+#define SHC_ChannelModeShading1ShadingBreakElevationMax 60      // uint8_t
+#define SHC_ChannelModeShading1RoomTemperaturActiv 61      // 1 Bit, Bit 7
 #define     SHC_ChannelModeShading1RoomTemperaturActivMask 0x80
 #define     SHC_ChannelModeShading1RoomTemperaturActivShift 7
-#define SHC_ChannelModeShading1HeatingActive    56      // 1 Bit, Bit 6
+#define SHC_ChannelModeShading1HeatingActive    61      // 1 Bit, Bit 6
 #define     SHC_ChannelModeShading1HeatingActiveMask 0x40
 #define     SHC_ChannelModeShading1HeatingActiveShift 6
-#define SHC_ChannelModeShading1WindowOpenAllowed 56      // 1 Bit, Bit 5
+#define SHC_ChannelModeShading1WindowOpenAllowed 61      // 1 Bit, Bit 5
 #define     SHC_ChannelModeShading1WindowOpenAllowedMask 0x20
 #define     SHC_ChannelModeShading1WindowOpenAllowedShift 5
-#define SHC_ChannelModeShading1MaxHeatingValue  57      // uint8_t
-#define SHC_ChannelModeShading1RoomTemperaturMinimum 58      // float
-#define SHC_ChannelModeShading2                 62      // 1 Bit, Bit 7
+#define SHC_ChannelModeShading1MaxHeatingValue  62      // uint8_t
+#define SHC_ChannelModeShading1RoomTemperaturMinimum 63      // float
+#define SHC_ChannelModeShading2                 67      // 1 Bit, Bit 7
 #define     SHC_ChannelModeShading2Mask 0x80
 #define     SHC_ChannelModeShading2Shift 7
-#define SHC_ChannelModeShading2TemperatureActive 62      // 1 Bit, Bit 6
+#define SHC_ChannelModeShading2TemperatureActive 67      // 1 Bit, Bit 6
 #define     SHC_ChannelModeShading2TemperatureActiveMask 0x40
 #define     SHC_ChannelModeShading2TemperatureActiveShift 6
-#define SHC_ChannelModeShading2TemperatureForecast 62      // 1 Bit, Bit 5
+#define SHC_ChannelModeShading2TemperatureForecast 67      // 1 Bit, Bit 5
 #define     SHC_ChannelModeShading2TemperatureForecastMask 0x20
 #define     SHC_ChannelModeShading2TemperatureForecastShift 5
-#define SHC_ChannelModeShading2BrightnessActiv  62      // 1 Bit, Bit 4
+#define SHC_ChannelModeShading2BrightnessActiv  67      // 1 Bit, Bit 4
 #define     SHC_ChannelModeShading2BrightnessActivMask 0x10
 #define     SHC_ChannelModeShading2BrightnessActivShift 4
-#define SHC_ChannelModeShading2UVIActiv         62      // 1 Bit, Bit 3
+#define SHC_ChannelModeShading2UVIActiv         67      // 1 Bit, Bit 3
 #define     SHC_ChannelModeShading2UVIActivMask 0x08
 #define     SHC_ChannelModeShading2UVIActivShift 3
-#define SHC_ChannelModeShading2RainActiv        62      // 1 Bit, Bit 2
+#define SHC_ChannelModeShading2RainActiv        67      // 1 Bit, Bit 2
 #define     SHC_ChannelModeShading2RainActivMask 0x04
 #define     SHC_ChannelModeShading2RainActivShift 2
-#define SHC_ChannelModeShading2SlatElevationDepending 62      // 1 Bit, Bit 1
+#define SHC_ChannelModeShading2SlatElevationDepending 67      // 1 Bit, Bit 1
 #define     SHC_ChannelModeShading2SlatElevationDependingMask 0x02
 #define     SHC_ChannelModeShading2SlatElevationDependingShift 1
-#define SHC_ChannelModeShading2ShadingBreak     62      // 8 Bits, Bit 0--7
-#define SHC_ChannelModeShading2WaitTimeStart    63      // uint16_t
-#define SHC_ChannelModeShading2WaitTimeEnd      65      // uint16_t
-#define SHC_ChannelModeShading2AzimutMin        67      // uint16_t
-#define SHC_ChannelModeShading2AzimutMax        69      // uint16_t
-#define SHC_ChannelModeShading2ElevationMin     71      // uint8_t
-#define SHC_ChannelModeShading2ElevationMax     72      // uint8_t
-#define SHC_ChannelModeShading2TemperatureMin   73      // uint8_t
-#define SHC_ChannelModeShading2TemperatureForecastMin 74      // uint8_t
-#define SHC_ChannelModeShading2BrightnessMin    75      // uint8_t
-#define SHC_ChannelModeShading2Hysterese        76      // uint8_t
-#define SHC_ChannelModeShading2UVIMin           77      // float
-#define SHC_ChannelModeShading2Clouds           81      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading2ActivationOnlyIfLessThan 82      // 7 Bits, Bit 7-1
+#define SHC_ChannelModeShading2ShadingBreak     67      // 8 Bits, Bit 0--7
+#define SHC_ChannelModeShading2WaitTimeStart    68      // uint16_t
+#define SHC_ChannelModeShading2WaitTimeEnd      70      // uint16_t
+#define SHC_ChannelModeShading2AzimutMin        72      // uint16_t
+#define SHC_ChannelModeShading2AzimutMax        74      // uint16_t
+#define SHC_ChannelModeShading2ElevationMin     76      // uint8_t
+#define SHC_ChannelModeShading2ElevationMax     77      // uint8_t
+#define SHC_ChannelModeShading2TemperatureMin   78      // uint8_t
+#define SHC_ChannelModeShading2TemperatureForecastMin 79      // uint8_t
+#define SHC_ChannelModeShading2BrightnessMin    80      // uint8_t
+#define SHC_ChannelModeShading2Hysterese        81      // uint8_t
+#define SHC_ChannelModeShading2UVIMin           82      // float
+#define SHC_ChannelModeShading2Clouds           86      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading2ActivationOnlyIfLessThan 87      // 7 Bits, Bit 7-1
 #define     SHC_ChannelModeShading2ActivationOnlyIfLessThanMask 0xFE
 #define     SHC_ChannelModeShading2ActivationOnlyIfLessThanShift 1
-#define SHC_ChannelModeShading2ShadingPosition  83      // 7 Bits, Bit 7-1
+#define SHC_ChannelModeShading2ShadingPosition  88      // 7 Bits, Bit 7-1
 #define     SHC_ChannelModeShading2ShadingPositionMask 0xFE
 #define     SHC_ChannelModeShading2ShadingPositionShift 1
-#define SHC_ChannelModeShading2SlatShadingPosition 84      // 7 Bits, Bit 7-1
+#define SHC_ChannelModeShading2SlatShadingPosition 89      // 7 Bits, Bit 7-1
 #define     SHC_ChannelModeShading2SlatShadingPositionMask 0xFE
 #define     SHC_ChannelModeShading2SlatShadingPositionShift 1
-#define SHC_ChannelModeShading2MinChangeForSlatAdaption 85      // 8 Bits, Bit 7-0
-#define SHC_ChannelModeShading2OffsetSlatPosition 86      // int8_t
-#define SHC_ChannelModeShading2ShadingBreakAzimutMin 87      // uint16_t
-#define SHC_ChannelModeShading2ShadingBreakAzimutMax 89      // uint16_t
-#define SHC_ChannelModeShading2ShadingBreakElevationMin 91      // uint8_t
-#define SHC_ChannelModeShading2ShadingBreakElevationMax 92      // uint8_t
-#define SHC_ChannelModeShading2RoomTemperaturActiv 93      // 1 Bit, Bit 7
+#define SHC_ChannelModeShading2MinChangeForSlatAdaption 90      // 8 Bits, Bit 7-0
+#define SHC_ChannelModeShading2OffsetSlatPosition 91      // int8_t
+#define SHC_ChannelModeShading2ShadingBreakAzimutMin 92      // uint16_t
+#define SHC_ChannelModeShading2ShadingBreakAzimutMax 94      // uint16_t
+#define SHC_ChannelModeShading2ShadingBreakElevationMin 96      // uint8_t
+#define SHC_ChannelModeShading2ShadingBreakElevationMax 97      // uint8_t
+#define SHC_ChannelModeShading2RoomTemperaturActiv 98      // 1 Bit, Bit 7
 #define     SHC_ChannelModeShading2RoomTemperaturActivMask 0x80
 #define     SHC_ChannelModeShading2RoomTemperaturActivShift 7
-#define SHC_ChannelModeShading2HeatingActive    93      // 1 Bit, Bit 6
+#define SHC_ChannelModeShading2HeatingActive    98      // 1 Bit, Bit 6
 #define     SHC_ChannelModeShading2HeatingActiveMask 0x40
 #define     SHC_ChannelModeShading2HeatingActiveShift 6
-#define SHC_ChannelModeShading2WindowOpenAllowed 93      // 1 Bit, Bit 5
+#define SHC_ChannelModeShading2WindowOpenAllowed 98      // 1 Bit, Bit 5
 #define     SHC_ChannelModeShading2WindowOpenAllowedMask 0x20
 #define     SHC_ChannelModeShading2WindowOpenAllowedShift 5
-#define SHC_ChannelModeShading2MaxHeatingValue  94      // uint8_t
-#define SHC_ChannelModeShading2RoomTemperaturMinimum 95      // float
+#define SHC_ChannelModeShading2MaxHeatingValue  99      // uint8_t
+#define SHC_ChannelModeShading2RoomTemperaturMinimum 100      // float
 
 // Geräteart
 #define ParamSHC_ChannelType                         (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelType)))
@@ -908,16 +473,24 @@
 #define ParamSHC_ChannelNightModeStopPosition        (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelNightModeStopPosition)) & SHC_ChannelNightModeStopPositionMask)
 // Lamellenstellung
 #define ParamSHC_ChannelNightModeStopSlatPosition    (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelNightModeStopSlatPosition)) & SHC_ChannelNightModeStopSlatPositionMask)
-// Fenster offen Modus
-#define ParamSHC_ChannelModeWindowOpen               ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpen)) & SHC_ChannelModeWindowOpenMask))
+// Fenster Offen
+#define ParamSHC_ChannelModeWindowOpenCount          ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenCount)) & SHC_ChannelModeWindowOpenCountMask) >> SHC_ChannelModeWindowOpenCountShift)
 // Position anfahren
-#define ParamSHC_ChannelModeWindowOpenPositionControl ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenPositionControl)) & SHC_ChannelModeWindowOpenPositionControlMask) >> SHC_ChannelModeWindowOpenPositionControlShift)
+#define ParamSHC_ChannelModeWindowOpenPositionControl1 ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenPositionControl1)) & SHC_ChannelModeWindowOpenPositionControl1Mask) >> SHC_ChannelModeWindowOpenPositionControl1Shift)
 // Lamellen öffnen
-#define ParamSHC_ChannelModeWindowOpenSlatPositionControl (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenSlatPositionControl)) & SHC_ChannelModeWindowOpenSlatPositionControlMask)
+#define ParamSHC_ChannelModeWindowOpenSlatPositionControl1 (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenSlatPositionControl1)) & SHC_ChannelModeWindowOpenSlatPositionControl1Mask)
 // Position
-#define ParamSHC_ChannelModeWindowOpenPosition       ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenPosition)) & SHC_ChannelModeWindowOpenPositionMask) >> SHC_ChannelModeWindowOpenPositionShift)
+#define ParamSHC_ChannelModeWindowOpenPosition1      ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenPosition1)) & SHC_ChannelModeWindowOpenPosition1Mask) >> SHC_ChannelModeWindowOpenPosition1Shift)
 // Lamellenstellung
-#define ParamSHC_ChannelModeWindowOpenSlatPosition   ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenSlatPosition)) & SHC_ChannelModeWindowOpenSlatPositionMask) >> SHC_ChannelModeWindowOpenSlatPositionShift)
+#define ParamSHC_ChannelModeWindowOpenSlatPosition1  ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenSlatPosition1)) & SHC_ChannelModeWindowOpenSlatPosition1Mask) >> SHC_ChannelModeWindowOpenSlatPosition1Shift)
+// Position anfahren
+#define ParamSHC_ChannelModeWindowOpenPositionControl2 ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenPositionControl2)) & SHC_ChannelModeWindowOpenPositionControl2Mask) >> SHC_ChannelModeWindowOpenPositionControl2Shift)
+// Lamellen öffnen
+#define ParamSHC_ChannelModeWindowOpenSlatPositionControl2 (knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenSlatPositionControl2)) & SHC_ChannelModeWindowOpenSlatPositionControl2Mask)
+// Position
+#define ParamSHC_ChannelModeWindowOpenPosition2      ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenPosition2)) & SHC_ChannelModeWindowOpenPosition2Mask) >> SHC_ChannelModeWindowOpenPosition2Shift)
+// Lamellenstellung
+#define ParamSHC_ChannelModeWindowOpenSlatPosition2  ((knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeWindowOpenSlatPosition2)) & SHC_ChannelModeWindowOpenSlatPosition2Mask) >> SHC_ChannelModeWindowOpenSlatPosition2Shift)
 // Beschattungsmodus 1
 #define ParamSHC_ChannelModeShading1                 ((bool)(knx.paramByte(SHC_ParamCalcIndex(SHC_ChannelModeShading1)) & SHC_ChannelModeShading1Mask))
 // Temperaturgrenze
@@ -1056,11 +629,11 @@
 #define ParamSHC_ChannelModeShading2RoomTemperaturMinimum (knx.paramFloat(SHC_ParamCalcIndex(SHC_ChannelModeShading2RoomTemperaturMinimum), Float_Enc_IEEE754Single))
 
 // deprecated
-#define SHC_KoOffset 1010
+#define SHC_KoOffset 420
 
 // Communication objects per channel (multiple occurrence)
-#define SHC_KoBlockOffset 1010
-#define SHC_KoBlockSize 40
+#define SHC_KoBlockOffset 420
+#define SHC_KoBlockSize 44
 
 #define SHC_KoCalcNumber(index) (index + SHC_KoBlockOffset + _channelIndex * SHC_KoBlockSize)
 #define SHC_KoCalcIndex(number) ((number >= SHC_KoCalcNumber(0) && number < SHC_KoCalcNumber(SHC_KoBlockSize)) ? (number - SHC_KoBlockOffset) % SHC_KoBlockSize : -1)
@@ -1086,26 +659,30 @@
 #define SHC_KoCHManualStepStop 17
 #define SHC_KoCHManualPercent 18
 #define SHC_KoCHManualSlatPercent 19
-#define SHC_KoCHWindowOpenModeActive 20
-#define SHC_KoCHWindow 21
-#define SHC_KoCHWindowOpenLock 22
-#define SHC_KoCHWindowOpenLockActive 23
-#define SHC_KoCHModeNightActive 24
-#define SHC_KoCHModeNight 25
-#define SHC_KoCHModeNightLock 26
-#define SHC_KoCHModeNightLockActive 27
-#define SHC_KoCHHeading 28
-#define SHC_KoCHRoomTemperature 29
-#define SHC_KoCHModeShading1Active 30
-#define SHC_KoCHModeShading1Lock 31
-#define SHC_KoCHModeShading1LockActive 32
-#define SHC_KoCHModeShading1ShadingBreakLock 33
-#define SHC_KoCHModeShading1ShadingBreakLockActive 34
-#define SHC_KoCHModeShading2Active 35
-#define SHC_KoCHModeShading2Lock 36
-#define SHC_KoCHModeShading2LockActive 37
-#define SHC_KoCHModeShading2ShadingBreakLock 38
-#define SHC_KoCHModeShading2ShadingBreakLockActive 39
+#define SHC_KoCHModeNightActive 20
+#define SHC_KoCHModeNight 21
+#define SHC_KoCHModeNightLock 22
+#define SHC_KoCHModeNightLockActive 23
+#define SHC_KoCHHeading 24
+#define SHC_KoCHRoomTemperature 25
+#define SHC_KoCHModeWindowOpenModeActive1 26
+#define SHC_KoCHModeWindowOpenOpened1 27
+#define SHC_KoCHModeWindowOpenLock1 28
+#define SHC_KoCHModeWindowOpenLockActive1 29
+#define SHC_KoCHModeWindowOpenModeActive2 30
+#define SHC_KoCHModeWindowOpenOpened2 31
+#define SHC_KoCHModeWindowOpenLock2 32
+#define SHC_KoCHModeWindowOpenLockActive2 33
+#define SHC_KoCHModeShading1Active 34
+#define SHC_KoCHModeShading1Lock 35
+#define SHC_KoCHModeShading1LockActive 36
+#define SHC_KoCHModeShading1ShadingBreakLock 37
+#define SHC_KoCHModeShading1ShadingBreakLockActive 38
+#define SHC_KoCHModeShading2Active 39
+#define SHC_KoCHModeShading2Lock 40
+#define SHC_KoCHModeShading2LockActive 41
+#define SHC_KoCHModeShading2ShadingBreakLock 42
+#define SHC_KoCHModeShading2ShadingBreakLockActive 43
 
 // 
 #define KoSHC_CHShutterPercentOutput              (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHShutterPercentOutput)))
@@ -1148,14 +725,6 @@
 // 
 #define KoSHC_CHManualSlatPercent                 (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHManualSlatPercent)))
 // 
-#define KoSHC_CHWindowOpenModeActive              (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHWindowOpenModeActive)))
-// 
-#define KoSHC_CHWindow                            (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHWindow)))
-// 
-#define KoSHC_CHWindowOpenLock                    (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHWindowOpenLock)))
-// 
-#define KoSHC_CHWindowOpenLockActive              (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHWindowOpenLockActive)))
-// 
 #define KoSHC_CHModeNightActive                   (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeNightActive)))
 // 
 #define KoSHC_CHModeNight                         (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeNight)))
@@ -1167,6 +736,22 @@
 #define KoSHC_CHHeading                           (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHHeading)))
 // Raumtemperatur
 #define KoSHC_CHRoomTemperature                   (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHRoomTemperature)))
+// 
+#define KoSHC_CHModeWindowOpenModeActive1         (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeWindowOpenModeActive1)))
+// 
+#define KoSHC_CHModeWindowOpenOpened1             (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeWindowOpenOpened1)))
+// 
+#define KoSHC_CHModeWindowOpenLock1               (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeWindowOpenLock1)))
+// 
+#define KoSHC_CHModeWindowOpenLockActive1         (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeWindowOpenLockActive1)))
+// 
+#define KoSHC_CHModeWindowOpenModeActive2         (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeWindowOpenModeActive2)))
+// 
+#define KoSHC_CHModeWindowOpenOpened2             (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeWindowOpenOpened2)))
+// 
+#define KoSHC_CHModeWindowOpenLock2               (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeWindowOpenLock2)))
+// 
+#define KoSHC_CHModeWindowOpenLockActive2         (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeWindowOpenLockActive2)))
 // 
 #define KoSHC_CHModeShading1Active                (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeShading1Active)))
 // 
@@ -1188,128 +773,128 @@
 // 
 #define KoSHC_CHModeShading2ShadingBreakLockActive (knx.getGroupObject(SHC_KoCalcNumber(SHC_KoCHModeShading2ShadingBreakLockActive)))
 
-#define LOG_BuzzerInstalled                     1458      // 1 Bit, Bit 7
+#define LOG_BuzzerInstalled                     259      // 1 Bit, Bit 7
 #define     LOG_BuzzerInstalledMask 0x80
 #define     LOG_BuzzerInstalledShift 7
-#define LOG_LedInstalled                        1458      // 1 Bit, Bit 6
+#define LOG_LedInstalled                        259      // 1 Bit, Bit 6
 #define     LOG_LedInstalledMask 0x40
 #define     LOG_LedInstalledShift 6
-#define LOG_VacationKo                          1458      // 1 Bit, Bit 5
+#define LOG_VacationKo                          259      // 1 Bit, Bit 5
 #define     LOG_VacationKoMask 0x20
 #define     LOG_VacationKoShift 5
-#define LOG_HolidayKo                           1458      // 1 Bit, Bit 4
+#define LOG_HolidayKo                           259      // 1 Bit, Bit 4
 #define     LOG_HolidayKoMask 0x10
 #define     LOG_HolidayKoShift 4
-#define LOG_VacationRead                        1458      // 1 Bit, Bit 3
+#define LOG_VacationRead                        259      // 1 Bit, Bit 3
 #define     LOG_VacationReadMask 0x08
 #define     LOG_VacationReadShift 3
-#define LOG_HolidaySend                         1458      // 1 Bit, Bit 2
+#define LOG_HolidaySend                         259      // 1 Bit, Bit 2
 #define     LOG_HolidaySendMask 0x04
 #define     LOG_HolidaySendShift 2
-#define LOG_EnableSave                          1458      // 1 Bit, Bit 1
+#define LOG_EnableSave                          259      // 1 Bit, Bit 1
 #define     LOG_EnableSaveMask 0x02
 #define     LOG_EnableSaveShift 1
-#define LOG_Neujahr                             1459      // 1 Bit, Bit 7
+#define LOG_Neujahr                             260      // 1 Bit, Bit 7
 #define     LOG_NeujahrMask 0x80
 #define     LOG_NeujahrShift 7
-#define LOG_DreiKoenige                         1459      // 1 Bit, Bit 6
+#define LOG_DreiKoenige                         260      // 1 Bit, Bit 6
 #define     LOG_DreiKoenigeMask 0x40
 #define     LOG_DreiKoenigeShift 6
-#define LOG_Weiberfastnacht                     1459      // 1 Bit, Bit 5
+#define LOG_Weiberfastnacht                     260      // 1 Bit, Bit 5
 #define     LOG_WeiberfastnachtMask 0x20
 #define     LOG_WeiberfastnachtShift 5
-#define LOG_Rosenmontag                         1459      // 1 Bit, Bit 4
+#define LOG_Rosenmontag                         260      // 1 Bit, Bit 4
 #define     LOG_RosenmontagMask 0x10
 #define     LOG_RosenmontagShift 4
-#define LOG_Fastnachtsdienstag                  1459      // 1 Bit, Bit 3
+#define LOG_Fastnachtsdienstag                  260      // 1 Bit, Bit 3
 #define     LOG_FastnachtsdienstagMask 0x08
 #define     LOG_FastnachtsdienstagShift 3
-#define LOG_Aschermittwoch                      1459      // 1 Bit, Bit 2
+#define LOG_Aschermittwoch                      260      // 1 Bit, Bit 2
 #define     LOG_AschermittwochMask 0x04
 #define     LOG_AschermittwochShift 2
-#define LOG_Frauentag                           1459      // 1 Bit, Bit 1
+#define LOG_Frauentag                           260      // 1 Bit, Bit 1
 #define     LOG_FrauentagMask 0x02
 #define     LOG_FrauentagShift 1
-#define LOG_Gruendonnerstag                     1459      // 1 Bit, Bit 0
+#define LOG_Gruendonnerstag                     260      // 1 Bit, Bit 0
 #define     LOG_GruendonnerstagMask 0x01
 #define     LOG_GruendonnerstagShift 0
-#define LOG_Karfreitag                          1460      // 1 Bit, Bit 7
+#define LOG_Karfreitag                          261      // 1 Bit, Bit 7
 #define     LOG_KarfreitagMask 0x80
 #define     LOG_KarfreitagShift 7
-#define LOG_Ostersonntag                        1460      // 1 Bit, Bit 6
+#define LOG_Ostersonntag                        261      // 1 Bit, Bit 6
 #define     LOG_OstersonntagMask 0x40
 #define     LOG_OstersonntagShift 6
-#define LOG_Ostermontag                         1460      // 1 Bit, Bit 5
+#define LOG_Ostermontag                         261      // 1 Bit, Bit 5
 #define     LOG_OstermontagMask 0x20
 #define     LOG_OstermontagShift 5
-#define LOG_TagDerArbeit                        1460      // 1 Bit, Bit 4
+#define LOG_TagDerArbeit                        261      // 1 Bit, Bit 4
 #define     LOG_TagDerArbeitMask 0x10
 #define     LOG_TagDerArbeitShift 4
-#define LOG_Himmelfahrt                         1460      // 1 Bit, Bit 3
+#define LOG_Himmelfahrt                         261      // 1 Bit, Bit 3
 #define     LOG_HimmelfahrtMask 0x08
 #define     LOG_HimmelfahrtShift 3
-#define LOG_Pfingstsonntag                      1460      // 1 Bit, Bit 2
+#define LOG_Pfingstsonntag                      261      // 1 Bit, Bit 2
 #define     LOG_PfingstsonntagMask 0x04
 #define     LOG_PfingstsonntagShift 2
-#define LOG_Pfingstmontag                       1460      // 1 Bit, Bit 1
+#define LOG_Pfingstmontag                       261      // 1 Bit, Bit 1
 #define     LOG_PfingstmontagMask 0x02
 #define     LOG_PfingstmontagShift 1
-#define LOG_Fronleichnam                        1460      // 1 Bit, Bit 0
+#define LOG_Fronleichnam                        261      // 1 Bit, Bit 0
 #define     LOG_FronleichnamMask 0x01
 #define     LOG_FronleichnamShift 0
-#define LOG_Friedensfest                        1461      // 1 Bit, Bit 7
+#define LOG_Friedensfest                        262      // 1 Bit, Bit 7
 #define     LOG_FriedensfestMask 0x80
 #define     LOG_FriedensfestShift 7
-#define LOG_MariaHimmelfahrt                    1461      // 1 Bit, Bit 6
+#define LOG_MariaHimmelfahrt                    262      // 1 Bit, Bit 6
 #define     LOG_MariaHimmelfahrtMask 0x40
 #define     LOG_MariaHimmelfahrtShift 6
-#define LOG_DeutscheEinheit                     1461      // 1 Bit, Bit 5
+#define LOG_DeutscheEinheit                     262      // 1 Bit, Bit 5
 #define     LOG_DeutscheEinheitMask 0x20
 #define     LOG_DeutscheEinheitShift 5
-#define LOG_Nationalfeiertag                    1462      // 1 Bit, Bit 1
+#define LOG_Nationalfeiertag                    263      // 1 Bit, Bit 1
 #define     LOG_NationalfeiertagMask 0x02
 #define     LOG_NationalfeiertagShift 1
-#define LOG_Reformationstag                     1461      // 1 Bit, Bit 4
+#define LOG_Reformationstag                     262      // 1 Bit, Bit 4
 #define     LOG_ReformationstagMask 0x10
 #define     LOG_ReformationstagShift 4
-#define LOG_Allerheiligen                       1461      // 1 Bit, Bit 3
+#define LOG_Allerheiligen                       262      // 1 Bit, Bit 3
 #define     LOG_AllerheiligenMask 0x08
 #define     LOG_AllerheiligenShift 3
-#define LOG_BussBettag                          1461      // 1 Bit, Bit 2
+#define LOG_BussBettag                          262      // 1 Bit, Bit 2
 #define     LOG_BussBettagMask 0x04
 #define     LOG_BussBettagShift 2
-#define LOG_MariaEmpfaengnis                    1462      // 1 Bit, Bit 0
+#define LOG_MariaEmpfaengnis                    263      // 1 Bit, Bit 0
 #define     LOG_MariaEmpfaengnisMask 0x01
 #define     LOG_MariaEmpfaengnisShift 0
-#define LOG_Advent1                             1461      // 1 Bit, Bit 1
+#define LOG_Advent1                             262      // 1 Bit, Bit 1
 #define     LOG_Advent1Mask 0x02
 #define     LOG_Advent1Shift 1
-#define LOG_Advent2                             1461      // 1 Bit, Bit 0
+#define LOG_Advent2                             262      // 1 Bit, Bit 0
 #define     LOG_Advent2Mask 0x01
 #define     LOG_Advent2Shift 0
-#define LOG_Advent3                             1462      // 1 Bit, Bit 7
+#define LOG_Advent3                             263      // 1 Bit, Bit 7
 #define     LOG_Advent3Mask 0x80
 #define     LOG_Advent3Shift 7
-#define LOG_Advent4                             1462      // 1 Bit, Bit 6
+#define LOG_Advent4                             263      // 1 Bit, Bit 6
 #define     LOG_Advent4Mask 0x40
 #define     LOG_Advent4Shift 6
-#define LOG_Heiligabend                         1462      // 1 Bit, Bit 5
+#define LOG_Heiligabend                         263      // 1 Bit, Bit 5
 #define     LOG_HeiligabendMask 0x20
 #define     LOG_HeiligabendShift 5
-#define LOG_Weihnachtstag1                      1462      // 1 Bit, Bit 4
+#define LOG_Weihnachtstag1                      263      // 1 Bit, Bit 4
 #define     LOG_Weihnachtstag1Mask 0x10
 #define     LOG_Weihnachtstag1Shift 4
-#define LOG_Weihnachtstag2                      1462      // 1 Bit, Bit 3
+#define LOG_Weihnachtstag2                      263      // 1 Bit, Bit 3
 #define     LOG_Weihnachtstag2Mask 0x08
 #define     LOG_Weihnachtstag2Shift 3
-#define LOG_Silvester                           1462      // 1 Bit, Bit 2
+#define LOG_Silvester                           263      // 1 Bit, Bit 2
 #define     LOG_SilvesterMask 0x04
 #define     LOG_SilvesterShift 2
-#define LOG_BuzzerSilent                        1463      // uint16_t
-#define LOG_BuzzerNormal                        1465      // uint16_t
-#define LOG_BuzzerLoud                          1467      // uint16_t
-#define LOG_VisibleChannels                     1469      // uint8_t
-#define LOG_LedMapping                          1470      // 3 Bits, Bit 7-5
+#define LOG_BuzzerSilent                        264      // uint16_t
+#define LOG_BuzzerNormal                        266      // uint16_t
+#define LOG_BuzzerLoud                          268      // uint16_t
+#define LOG_VisibleChannels                     270      // uint8_t
+#define LOG_LedMapping                          271      // 3 Bits, Bit 7-5
 #define     LOG_LedMappingMask 0xE0
 #define     LOG_LedMappingShift 5
 
@@ -1419,10 +1004,10 @@
 // Buzzer sperren
 #define KoLOG_BuzzerLock                          (knx.getGroupObject(LOG_KoBuzzerLock))
 
-#define LOG_ChannelCount 40
+#define LOG_ChannelCount 1
 
 // Parameter per channel
-#define LOG_ParamBlockOffset 1471
+#define LOG_ParamBlockOffset 272
 #define LOG_ParamBlockSize 86
 #define LOG_ParamCalcIndex(index) (index + LOG_ParamBlockOffset + _channelIndex * LOG_ParamBlockSize)
 
@@ -3102,11 +2687,11 @@
 
 // Header generation for Module 'BASE_KommentarModule'
 
-#define BASE_KommentarModuleCount 40
+#define BASE_KommentarModuleCount 1
 #define BASE_KommentarModuleModuleParamSize 0
 #define BASE_KommentarModuleSubmodulesParamSize 0
 #define BASE_KommentarModuleParamSize 0
-#define BASE_KommentarModuleParamOffset 4911
+#define BASE_KommentarModuleParamOffset 358
 #define BASE_KommentarModuleCalcIndex(index, m1) (index + BASE_KommentarModuleParamOffset + _channelIndex * BASE_KommentarModuleCount * BASE_KommentarModuleParamSize + m1 * BASE_KommentarModuleParamSize)
 
 

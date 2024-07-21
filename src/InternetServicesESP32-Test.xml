@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <?xml-model href="../../Organization/knxprod-support/knx_project_20/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <KNX xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
-  <op:ETS OpenKnxId="0xAE" ApplicationNumber="0x30" ApplicationVersion="0" ReplacesVersions="0" ApplicationRevision="0" ProductName="Jalousiensteuerung" BusCurrent="30" BuildSuffix="-Dev" BuildSuffixText=" (Dev)" OrderNumber="MGKnxINET" />
+  <op:ETS OpenKnxId="0xAE" ApplicationNumber="0x30" ApplicationVersion="6" ReplacesVersions="0 1 2 3 4" ApplicationRevision="0" ProductName="Jalousiensteuerung" BusCurrent="30" BuildSuffix="-Dev" BuildSuffixText=" (Dev)" OrderNumber="MGKnxINET" />
 
   <op:define prefix="BASE" ModuleType="10" share="../lib/OGM-Common/src/Common.share.xml">
     <op:verify File="../lib/OGM-Common/library.json" ModuleVersion="1.2" />
